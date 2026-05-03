@@ -17,13 +17,7 @@ class Api extends CI_Controller
      */
     public function push_results()
     {
-        // 1. Verifikasi API Key dari Header
-        $received_key = $this->input->get_header('X-API-KEY');
-        if ($received_key !== $this->api_key) {
-            return $this->_response(['status' => 'error', 'message' => 'Unauthorized Access'], 401);
-        }
-
-        // 2. Ambil Input JSON
+        // 1. Ambil Input JSON Terlebih Dahulu
         $input = json_decode($this->input->raw_input_stream, true);
         if (empty($input) || !isset($input['event_id']) || !isset($input['results'])) {
             return $this->_response(['status' => 'error', 'message' => 'Invalid Data Format'], 400);
@@ -32,10 +26,16 @@ class Api extends CI_Controller
         $event_id = $input['event_id'];
         $results = $input['results'];
 
-        // 3. Cek apakah Event ID Valid
-        $event_exists = $this->db->get_where('events', ['id' => $event_id])->num_rows();
-        if (!$event_exists) {
+        // 2. Ambil API Key dari Database untuk Event Ini
+        $event = $this->db->get_where('events', ['id' => $event_id])->row_array();
+        if (!$event) {
             return $this->_response(['status' => 'error', 'message' => 'Event not found'], 404);
+        }
+
+        // 3. Verifikasi API Key dari Header vs Database
+        $received_key = $this->input->get_header('X-API-KEY');
+        if (empty($event['api_key']) || $received_key !== $event['api_key']) {
+            return $this->_response(['status' => 'error', 'message' => 'Unauthorized Access: Invalid API Key for this Event'], 401);
         }
 
         // 4. Proses Simpan Data (Gunakan Transaksi)

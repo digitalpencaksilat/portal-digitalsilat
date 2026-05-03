@@ -238,4 +238,34 @@ class Admin extends CI_Controller
         $this->session->set_flashdata('success', 'Kontak berhasil diperbarui!');
         redirect('admin/pengaturan');
     }
+
+    // --- 7. MANAJEMEN API KEY (BARU) ---
+    public function api_management()
+    {
+        $this->_check_login();
+        $this->db->order_by('created_at', 'DESC');
+        $data['events'] = $this->db->get('events')->result_array();
+        $this->load->view('admin/api_settings', $data);
+    }
+
+    public function generate_api_key($id)
+    {
+        $this->_check_login();
+        
+        // Generate key acak: DPS-RANDOM
+        $new_key = 'DPS-' . strtoupper(bin2hex(random_bytes(8)));
+        
+        $this->db->where('id', $id);
+        $this->db->update('events', ['api_key' => $new_key]);
+        
+        $this->session->set_flashdata('success', 'API Key berhasil diperbarui!');
+        redirect('admin/api_management');
+    }
+
+    private function _check_login()
+    {
+        if (!$this->session->userdata('logged_in')) {
+            redirect('admin');
+        }
+    }
 }

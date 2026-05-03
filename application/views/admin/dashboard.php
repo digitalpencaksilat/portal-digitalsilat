@@ -155,6 +155,7 @@
                 ADMIN PANEL
             </a>
             <div class="d-flex align-items-center">
+                <a href="<?= base_url('admin/api_management'); ?>" class="btn btn-outline-danger btn-sm me-2"><i class="fas fa-key me-1"></i> Manajemen API</a>
                 <a href="<?= base_url('admin/pengaturan'); ?>" class="btn btn-outline-dark btn-sm me-2"><i class="fas fa-cog me-1"></i> Pengaturan Kontak</a>
                 <span class="d-none d-md-block me-3 text-muted">Hai, <strong><?= $this->session->userdata('nama'); ?></strong></span>
                 <a href="<?= base_url('admin/logout'); ?>" class="btn btn-outline-danger btn-sm" id="btn-logout">
