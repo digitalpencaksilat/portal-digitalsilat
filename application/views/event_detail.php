@@ -150,9 +150,31 @@
 
         footer {
             background-color: #ffffff;
-            padding: 40px 0 20px;
+            padding: 70px 0 30px;
             border-top: 1px solid #eee;
             margin-top: 60px;
+        }
+
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-family: 'Oswald', sans-serif;
+            color: var(--brand-primary);
+            margin-bottom: 25px;
+            font-weight: bold;
+            line-height: 1.2;
+        }
+
+        .footer-brand img {
+            height: 60px;
+            width: auto;
+        }
+
+        .brand-text {
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .btn-brand {
