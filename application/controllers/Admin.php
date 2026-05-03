@@ -252,8 +252,8 @@ class Admin extends CI_Controller
     {
         $this->_check_login();
         
-        // Generate key acak: DPS-RANDOM
-        $new_key = 'DPS-' . strtoupper(bin2hex(random_bytes(8)));
+        // Generate 32-character hex string from 16 random bytes
+        $new_key = bin2hex(random_bytes(16));
         
         $this->db->where('id', $id);
         $this->db->update('events', ['api_key' => $new_key]);
