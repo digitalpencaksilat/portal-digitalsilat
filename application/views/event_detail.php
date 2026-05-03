@@ -226,9 +226,19 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
-                <div class="info-box shadow-sm mb-5">
-                    <h4 class="mb-3"><i class="fas fa-trophy text-warning me-2"></i> Hasil Akhir Pertandingan</h4>
-                    <p class="text-muted mb-0">Berikut adalah daftar pemenang resmi untuk kategori Tanding dan Seni pada kejuaraan ini. Data disinkronkan langsung dari sistem Digital Scoring.</p>
+                <div class="info-box shadow-sm mb-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-7">
+                            <h4 class="mb-2"><i class="fas fa-trophy text-warning me-2"></i> Hasil Akhir Pertandingan</h4>
+                            <p class="text-muted mb-md-0">Berikut adalah daftar pemenang resmi yang disinkronkan langsung dari sistem Digital Scoring.</p>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="input-group">
+                                <span class="input-group-text bg-white border-end-0"><i class="fas fa-search text-muted"></i></span>
+                                <input type="text" id="searchResult" class="form-control border-start-0" placeholder="Cari nama atlet atau kontingen...">
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Tabs Kategori -->
@@ -255,7 +265,7 @@
                             </div>
                         <?php else: ?>
                             <div class="table-responsive">
-                                <table class="table table-custom">
+                                <table class="table table-custom" id="tableTanding">
                                     <thead>
                                         <tr>
                                             <th>No</th>
@@ -271,10 +281,10 @@
                                             <?php 
                                                 $rank_class = 'rank-' . strtolower($res['rank_label']);
                                             ?>
-                                            <tr>
+                                            <tr class="result-row">
                                                 <td><?= $no++; ?></td>
-                                                <td class="fw-bold"><?= $res['winner_name'] ?></td>
-                                                <td><?= $res['contingent'] ?></td>
+                                                <td class="fw-bold winner-name"><?= $res['winner_name'] ?></td>
+                                                <td class="contingent-name"><?= $res['contingent'] ?></td>
                                                 <td><?= $res['age_category'] ?></td>
                                                 <td><span class="badge bg-light text-dark"><?= $res['category_detail'] ?></span></td>
                                                 <td width="150">
@@ -297,7 +307,7 @@
                             </div>
                         <?php else: ?>
                             <div class="table-responsive">
-                                <table class="table table-custom">
+                                <table class="table table-custom" id="tableSeni">
                                     <thead>
                                         <tr>
                                             <th>No</th>
@@ -313,10 +323,10 @@
                                             <?php 
                                                 $rank_class = 'rank-' . strtolower($res['rank_label']);
                                             ?>
-                                            <tr>
+                                            <tr class="result-row">
                                                 <td><?= $no++; ?></td>
-                                                <td class="fw-bold"><?= $res['winner_name'] ?></td>
-                                                <td><?= $res['contingent'] ?></td>
+                                                <td class="fw-bold winner-name"><?= $res['winner_name'] ?></td>
+                                                <td class="contingent-name"><?= $res['contingent'] ?></td>
                                                 <td><?= $res['age_category'] ?></td>
                                                 <td><span class="badge bg-light text-dark"><?= $res['category_detail'] ?></span></td>
                                                 <td width="150">
@@ -334,19 +344,61 @@
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer>
-        <div class="container text-center">
-            <p class="text-muted small">&copy; <?= date('Y'); ?> Digital Pencak Silat. All rights reserved.</p>
-            <div class="d-flex justify-content-center gap-3 mt-3">
-                <a href="https://instagram.com/<?= $s['instagram'] ?>" class="text-danger"><i class="fab fa-instagram fa-lg"></i></a>
-                <a href="<?= $s['youtube'] ?>" class="text-danger"><i class="fab fa-youtube fa-lg"></i></a>
-                <a href="mailto:<?= $s['email'] ?>" class="text-danger"><i class="far fa-envelope fa-lg"></i></a>
+    <!-- Footer Dinamis -->
+    <footer id="contact">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="footer-brand">
+                        <img src="<?= base_url('assets/logo/logo.png'); ?>" alt="Logo">
+                        <span class="brand-text">DIGITAL PENCAK SILAT</span>
+                    </div>
+                    <p class="text-muted">Mendukung digitalisasi event pencak silat untuk pelestarian budaya dan prestasi atlet Indonesia.</p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5 class="text-uppercase fw-bold mb-3" style="color: var(--brand-primary);">Navigasi</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="<?= base_url(); ?>#home" class="text-dark text-decoration-none hover-underline">Beranda</a></li>
+                        <li class="mb-2"><a href="<?= base_url(); ?>#about" class="text-dark text-decoration-none hover-underline">Tentang Kami</a></li>
+                        <li class="mb-2"><a href="<?= base_url(); ?>#events" class="text-dark text-decoration-none hover-underline">Jadwal Event</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5 class="text-uppercase fw-bold mb-3" style="color: var(--brand-primary);">Kontak Panitia</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2 text-dark"><i class="fab fa-whatsapp me-2 text-success"></i> +<?= $s['whatsapp']; ?></li>
+                        <li class="mb-2 text-dark"><i class="far fa-envelope me-2 text-danger"></i> <?= $s['email']; ?></li>
+                        <li class="mb-2"><a href="https://instagram.com/<?= $s['instagram']; ?>" target="_blank" class="text-dark text-decoration-none hover-underline"><i class="fab fa-instagram me-2 text-danger"></i> @<?= $s['instagram']; ?></a></li>
+                        <li class="mb-2"><a href="<?= $s['youtube']; ?>" target="_blank" class="text-dark text-decoration-none hover-underline"><i class="fab fa-youtube me-2 text-danger"></i> Youtube Channel</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr style="border-color: #eee;">
+            <div class="text-center pb-3 pt-2">
+                <small class="text-muted">&copy; <?= date('Y'); ?> Digital Pencak Silat. All rights reserved.</small>
             </div>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Fitur Pencarian Real-time
+        document.getElementById('searchResult').addEventListener('keyup', function() {
+            const value = this.value.toLowerCase();
+            const rows = document.querySelectorAll('.result-row');
+
+            rows.forEach(row => {
+                const name = row.querySelector('.winner-name').textContent.toLowerCase();
+                const contingent = row.querySelector('.contingent-name').textContent.toLowerCase();
+                
+                if (name.includes(value) || contingent.includes(value)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>
