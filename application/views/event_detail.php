@@ -258,26 +258,28 @@
                                 <table class="table table-custom">
                                     <thead>
                                         <tr>
-                                            <th>Rank</th>
+                                            <th>No</th>
                                             <th>Nama Atlet</th>
                                             <th>Kontingen</th>
+                                            <th>Kategori</th>
                                             <th>Kelas</th>
-                                            <th>Usia</th>
+                                            <th>Medali</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php foreach($results_tanding as $res): ?>
+                                        <?php $no = 1; foreach($results_tanding as $res): ?>
                                             <?php 
                                                 $rank_class = 'rank-' . strtolower($res['rank_label']);
                                             ?>
                                             <tr>
+                                                <td><?= $no++; ?></td>
+                                                <td class="fw-bold"><?= $res['winner_name'] ?></td>
+                                                <td><?= $res['contingent'] ?></td>
+                                                <td><?= $res['age_category'] ?></td>
+                                                <td><span class="badge bg-light text-dark"><?= $res['category_detail'] ?></span></td>
                                                 <td width="150">
                                                     <span class="badge-rank <?= $rank_class ?>"><?= $res['rank_label'] ?></span>
                                                 </td>
-                                                <td class="fw-bold"><?= $res['winner_name'] ?></td>
-                                                <td><?= $res['contingent'] ?></td>
-                                                <td><span class="badge bg-light text-dark"><?= $res['category_detail'] ?></span></td>
-                                                <td><?= $res['age_category'] ?></td>
                                             </tr>
                                         <?php endforeach; ?>
                                     </tbody>
@@ -298,26 +300,28 @@
                                 <table class="table table-custom">
                                     <thead>
                                         <tr>
-                                            <th>Rank</th>
+                                            <th>No</th>
                                             <th>Nama Atlet / Kelompok</th>
                                             <th>Kontingen</th>
+                                            <th>Kategori</th>
                                             <th>Jenis Seni</th>
-                                            <th>Usia</th>
+                                            <th>Medali</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php foreach($results_seni as $res): ?>
+                                        <?php $no = 1; foreach($results_seni as $res): ?>
                                             <?php 
                                                 $rank_class = 'rank-' . strtolower($res['rank_label']);
                                             ?>
                                             <tr>
+                                                <td><?= $no++; ?></td>
+                                                <td class="fw-bold"><?= $res['winner_name'] ?></td>
+                                                <td><?= $res['contingent'] ?></td>
+                                                <td><?= $res['age_category'] ?></td>
+                                                <td><span class="badge bg-light text-dark"><?= $res['category_detail'] ?></span></td>
                                                 <td width="150">
                                                     <span class="badge-rank <?= $rank_class ?>"><?= $res['rank_label'] ?></span>
                                                 </td>
-                                                <td class="fw-bold"><?= $res['winner_name'] ?></td>
-                                                <td><?= $res['contingent'] ?></td>
-                                                <td><span class="badge bg-light text-dark"><?= $res['category_detail'] ?></span></td>
-                                                <td><?= $res['age_category'] ?></td>
                                             </tr>
                                         <?php endforeach; ?>
                                     </tbody>
