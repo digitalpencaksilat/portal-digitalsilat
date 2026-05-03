@@ -36,18 +36,46 @@
             background-color: #ffffff;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
             padding: 10px 0;
+            transition: all 0.3s;
         }
 
         .navbar-brand {
             color: var(--brand-primary) !important;
             font-weight: bold;
+            font-size: 1.3rem;
+            letter-spacing: 1px;
             display: flex;
             align-items: center;
         }
 
         .navbar-brand img {
-            height: 40px;
-            margin-right: 10px;
+            height: 50px;
+            width: auto;
+            margin-right: 12px;
+        }
+
+        .nav-link {
+            color: #555 !important;
+            margin-left: 20px;
+            font-weight: 600;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--brand-primary) !important;
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 3px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--brand-primary);
+            border-radius: 2px;
         }
 
         .event-header {
@@ -200,12 +228,20 @@
     <nav class="navbar navbar-expand-lg navbar-light fixed-top">
         <div class="container">
             <a class="navbar-brand" href="<?= base_url(); ?>">
-                <img src="<?= base_url('assets/logo/logo.png'); ?>" alt="Logo">
+                <img src="<?= base_url('assets/logo/logo.png'); ?>" alt="Logo Brand" class="img-fluid">
                 DIGITAL PENCAK SILAT
             </a>
-            <a href="<?= base_url(); ?>" class="btn btn-brand btn-sm ms-auto">
-                <i class="fas fa-arrow-left me-2"></i> Kembali ke Beranda
-            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="<?= base_url(); ?>">Beranda</a></li>
+                    <li class="nav-item"><a class="nav-link" href="<?= base_url(); ?>#about">Tentang Kami</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="<?= base_url(); ?>#events">Jadwal Event</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#contact">Kontak</a></li>
+                </ul>
+            </div>
         </div>
     </nav>
 
