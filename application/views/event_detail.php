@@ -27,7 +27,7 @@
             padding-top: 80px;
         }
 
-        h1, h2, h3, h4, h5, .nav-tabs .nav-link {
+        h1, h2, h3, h4, h5, .nav-tabs .nav-link, .navbar-brand {
             font-family: 'Oswald', sans-serif;
             text-transform: uppercase;
         }
@@ -231,17 +231,9 @@
                 <img src="<?= base_url('assets/logo/logo.png'); ?>" alt="Logo Brand" class="img-fluid">
                 DIGITAL PENCAK SILAT
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="<?= base_url(); ?>">Beranda</a></li>
-                    <li class="nav-item"><a class="nav-link" href="<?= base_url(); ?>#about">Tentang Kami</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="<?= base_url(); ?>#events">Jadwal Event</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#contact">Kontak</a></li>
-                </ul>
-            </div>
+            <a href="<?= base_url(); ?>" class="btn btn-brand btn-sm ms-auto">
+                <i class="fas fa-arrow-left me-2"></i> Kembali ke Beranda
+            </a>
         </div>
     </nav>
 
