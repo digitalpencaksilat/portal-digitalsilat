@@ -261,11 +261,4 @@ class Admin extends CI_Controller
         $this->session->set_flashdata('success', 'API Key berhasil diperbarui!');
         redirect('admin/api_management');
     }
-
-    private function _check_login()
-    {
-        if (!$this->session->userdata('logged_in')) {
-            redirect('admin');
-        }
-    }
 }
