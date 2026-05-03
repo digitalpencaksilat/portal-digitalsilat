@@ -33,16 +33,16 @@ class Api extends CI_Controller
         }
 
         // 3. Verifikasi API Key dari Header vs Database
-        $received_key = $this->input->get_header('X-API-KEY');
+        $received_key = $this->input->get_request_header('X-API-KEY');
         if (empty($event['api_key']) || $received_key !== $event['api_key']) {
             return $this->_response(['status' => 'error', 'message' => 'Unauthorized Access: Invalid API Key for this Event'], 401);
         }
 
-        // 4. Proses Simpan Data (Gunakan Transaksi)
+        // Proses Simpan Data (Gunakan Transaksi)
         $this->db->trans_start();
 
-        // Opsional: Hapus data lama untuk event ini jika ingin Full Sync
-        // $this->db->delete('event_results', ['event_id' => $event_id]);
+        // Hapus data lama untuk event ini (Full Sync)
+        $this->db->delete('event_results', ['event_id' => $event_id]);
 
         $batch_data = [];
         foreach ($results as $row) {
