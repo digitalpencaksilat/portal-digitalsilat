@@ -48,7 +48,8 @@
                     <table class="table table-hover align-middle mb-0">
                         <thead class="table-dark">
                             <tr>
-                                <th class="ps-4">Nama Event</th>
+                                <th class="ps-4">Event ID</th>
+                                <th>Nama Event</th>
                                 <th>Status Event</th>
                                 <th>API Key Access</th>
                                 <th class="text-center pe-4">Aksi</th>
@@ -57,7 +58,13 @@
                         <tbody>
                             <?php foreach($events as $e): ?>
                             <tr>
-                                <td class="ps-4 fw-bold"><?= $e['judul']; ?></td>
+                                <td class="ps-4">
+                                    <div class="d-flex align-items-center">
+                                        <code class="me-2 fw-bold text-dark"><?= $e['id']; ?></code>
+                                        <button class="btn btn-xs btn-outline-secondary py-0 px-1" style="font-size: 0.7rem;" onclick="copyText('<?= $e['id']; ?>', 'ID Event')"><i class="far fa-copy"></i></button>
+                                    </div>
+                                </td>
+                                <td class="fw-bold"><?= $e['judul']; ?></td>
                                 <td>
                                     <?php 
                                         $badge = 'bg-secondary';
@@ -70,7 +77,7 @@
                                     <?php if($e['api_key']): ?>
                                         <div class="d-flex align-items-center">
                                             <div class="api-key-box me-2" id="key-<?= $e['id']; ?>"><?= $e['api_key']; ?></div>
-                                            <button class="btn btn-sm btn-outline-primary" onclick="copyKey('<?= $e['api_key']; ?>')"><i class="far fa-copy"></i></button>
+                                            <button class="btn btn-sm btn-outline-primary" onclick="copyText('<?= $e['api_key']; ?>', 'API Key')"><i class="far fa-copy"></i></button>
                                         </div>
                                     <?php else: ?>
                                         <span class="text-muted small"><em>Belum di-generate</em></span>
@@ -101,12 +108,12 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        function copyKey(text) {
+        function copyText(text, label) {
             navigator.clipboard.writeText(text).then(() => {
                 Swal.fire({
                     icon: 'success',
                     title: 'Disalin!',
-                    text: 'API Key telah disalin ke clipboard.',
+                    text: label + ' telah disalin ke clipboard.',
                     timer: 1500,
                     showConfirmButton: false
                 });
