@@ -11,6 +11,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- DataTables Bootstrap 5 -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
 
     <style>
         :root {
@@ -218,6 +220,28 @@
         .btn-brand:hover {
             background-color: #a00000;
             color: white;
+        }
+
+        /* DataTables Custom Styling */
+        .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+            background: var(--brand-primary) !important;
+            border-color: var(--brand-primary) !important;
+            color: white !important;
+            border-radius: 5px;
+        }
+        .dataTables_wrapper .dataTables_length select {
+            border-radius: 8px;
+            padding: 5px;
+        }
+        .dataTables_wrapper .dataTables_filter {
+            display: none; /* Kita pakai search bar custom kita sendiri */
+        }
+        .page-item.active .page-link {
+            background-color: var(--brand-primary) !important;
+            border-color: var(--brand-primary) !important;
+        }
+        .page-link {
+            color: var(--brand-primary);
         }
     </style>
 </head>
@@ -431,21 +455,73 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // Fitur Pencarian Real-time
-        document.getElementById('searchResult').addEventListener('keyup', function() {
-            const value = this.value.toLowerCase();
-            const rows = document.querySelectorAll('.result-row');
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
 
-            rows.forEach(row => {
-                const name = row.querySelector('.winner-name').textContent.toLowerCase();
-                const contingent = row.querySelector('.contingent-name').textContent.toLowerCase();
-                
-                if (name.includes(value) || contingent.includes(value)) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
+    <script>
+        $(document).ready(function() {
+            // Inisialisasi DataTables
+            const tableTanding = $('#tableTanding').DataTable({
+                "pageLength": 10,
+                "lengthMenu": [10, 25, 50, 100],
+                "language": {
+                    "lengthMenu": "Tampilkan _MENU_ data per halaman",
+                    "zeroRecords": "Data tidak ditemukan",
+                    "info": "Menampilkan halaman _PAGE_ dari _PAGES_",
+                    "infoEmpty": "Tidak ada data tersedia",
+                    "infoFiltered": "(difilter dari _MAX_ total data)",
+                    "paginate": {
+                        "previous": "<",
+                        "next": ">"
+                    }
+                },
+                "dom": "<'row'<'col-sm-12'tr>>" + "<'row mt-3'<'col-sm-5'i><'col-sm-7'p>>" // Sembunyikan search default
+            });
+
+            const tableSeni = $('#tableSeni').DataTable({
+                "pageLength": 10,
+                "lengthMenu": [10, 25, 50, 100],
+                "language": {
+                    "lengthMenu": "Tampilkan _MENU_ data per halaman",
+                    "zeroRecords": "Data tidak ditemukan",
+                    "info": "Menampilkan halaman _PAGE_ dari _PAGES_",
+                    "infoEmpty": "Tidak ada data tersedia",
+                    "infoFiltered": "(difilter dari _MAX_ total data)",
+                    "paginate": {
+                        "previous": "<",
+                        "next": ">"
+                    }
+                },
+                "dom": "<'row'<'col-sm-12'tr>>" + "<'row mt-3'<'col-sm-5'i><'col-sm-7'p>>"
+            });
+
+            // Hubungkan search bar custom ke DataTables
+            $('#searchResult').on('keyup', function() {
+                const val = $(this).val();
+                tableTanding.search(val).draw();
+                tableSeni.search(val).draw();
+            });
+
+            // Tambahkan dropdown jumlah data di atas tabel secara manual agar rapi
+            $('.info-box').after(`
+                <div class="container mb-3">
+                    <div class="d-flex align-items-center justify-content-end gap-2">
+                        <span class="small text-muted">Tampilkan:</span>
+                        <select class="form-select form-select-sm w-auto" id="changeLength">
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                    </div>
+                </div>
+            `);
+
+            $('#changeLength').on('change', function() {
+                const len = $(this).val();
+                tableTanding.page.len(len).draw();
+                tableSeni.page.len(len).draw();
             });
         });
     </script>
