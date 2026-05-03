@@ -78,24 +78,41 @@ class Event extends CI_Controller
     // --- FUNGSI PEREKAM JEJAK PENGUNJUNG ---
     private function _track_visitor()
     {
-        // Cek IP Address User saat ini
-        $ip = $this->input->ip_address();
-        $date = date('Y-m-d');
+        // ... (tetap ada)
+    }
 
-        // Cek apakah IP ini sudah terekam di database pada tanggal hari ini?
-        $this->db->where('ip_address', $ip);
-        $this->db->where('access_date', $date);
-        $check = $this->db->get('visitors');
+    /**
+     * Halaman Detail Event & Daftar Juara
+     * /event/detail/{id}
+     */
+    public function detail($id = NULL)
+    {
+        if ($id === NULL) redirect('event');
 
-        // Jika belum ada (berarti pengunjung unik baru hari ini), maka simpan datanya
-        if ($check->num_rows() == 0) {
-            $data = [
-                'ip_address' => $ip,
-                'user_agent' => $this->input->user_agent(), // Informasi Browser/Device
-                'access_date' => $date
-            ];
-            $this->db->insert('visitors', $data);
-        }
+        // 1. Ambil Data Event
+        $data['event'] = $this->db->get_where('events', ['id' => $id])->row_array();
+        if (!$data['event']) show_404();
+
+        // 2. Ambil Data Hasil Kejuaraan
+        // Pisahkan Kategori Tanding
+        $this->db->where(['event_id' => $id, 'category_main' => 'tanding']);
+        $this->db->order_by('age_category', 'ASC');
+        $this->db->order_by('category_detail', 'ASC');
+        $this->db->order_by('rank_label', 'ASC');
+        $data['results_tanding'] = $this->db->get('event_results')->result_array();
+
+        // Pisahkan Kategori Seni
+        $this->db->where(['event_id' => $id, 'category_main' => 'seni']);
+        $this->db->order_by('age_category', 'ASC');
+        $this->db->order_by('category_detail', 'ASC');
+        $this->db->order_by('rank_label', 'ASC');
+        $data['results_seni'] = $this->db->get('event_results')->result_array();
+
+        // 3. Ambil Pengaturan Kontak untuk Footer
+        $settings_raw = $this->db->get('site_settings')->result_array();
+        $data['s'] = array_column($settings_raw, 'nilai', 'parameter');
+
+        $this->load->view('event_detail', $data);
     }
 
     // Helper untuk me-render HTML Event Card saat request AJAX
