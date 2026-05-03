@@ -1,0 +1,8 @@
+/vendor/
+/application/cache/*
+/application/logs/*
+!/application/cache/index.html
+!/application/logs/index.html
+.DS_Store
+user_guide/
+*.sql
