@@ -150,6 +150,9 @@ class Event extends CI_Controller
                             <li><i class="far fa-clipboard"></i><div><span class="label-text">Batas Pendaftaran</span><br><span class="value-text">' . $event['batas_pendaftaran'] . '</span></div></li>
                         </ul>
                         <div class="d-grid gap-2">
+                            <a href="' . base_url('event/detail/' . $event['id']) . '" class="btn btn-outline-danger mb-1">
+                                <i class="fas fa-trophy me-2"></i> Lihat Hasil Juara
+                            </a>
                             <button class="btn btn-brand btn-detail"
                                 data-title="' . htmlspecialchars($event['judul']) . '"
                                 data-date="' . htmlspecialchars($event['tanggal_pelaksanaan']) . '"
@@ -160,7 +163,7 @@ class Event extends CI_Controller
                                 data-link="' . $link . '"
                                 data-bs-toggle="modal"
                                 data-bs-target="#eventDetailModal">
-                                Detail & Pendaftaran
+                                Info Pendaftaran
                             </button>
                         </div>
                     </div>
