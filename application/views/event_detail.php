@@ -342,12 +342,12 @@
                                 <table class="table table-custom" id="tableTanding">
                                     <thead>
                                         <tr>
-                                            <th>No</th>
+                                            <th class="text-center">No</th>
                                             <th>Nama Atlet</th>
                                             <th>Kontingen</th>
-                                            <th>Kategori</th>
-                                            <th>Kelas</th>
-                                            <th>Medali</th>
+                                            <th class="text-center">Kategori</th>
+                                            <th class="text-center">Kelas</th>
+                                            <th class="text-center">Medali</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -356,12 +356,12 @@
                                                 $rank_class = 'rank-' . strtolower($res['rank_label']);
                                             ?>
                                             <tr class="result-row">
-                                                <td><?= $no++; ?></td>
-                                                <td class="fw-bold winner-name"><?= $res['winner_name'] ?></td>
+                                                <td class="text-center"><?= $no++; ?></td>
+                                                <td class="fw-bold winner-name"><?= ucwords(strtolower($res['winner_name'])) ?></td>
                                                 <td class="contingent-name"><?= $res['contingent'] ?></td>
-                                                <td><?= $res['age_category'] ?></td>
-                                                <td><span class="badge bg-light text-dark"><?= $res['category_detail'] ?></span></td>
-                                                <td width="150">
+                                                <td class="text-center"><?= $res['age_category'] ?></td>
+                                                <td class="text-center"><span class="badge bg-light text-dark"><?= $res['category_detail'] ?></span></td>
+                                                <td class="text-center" width="150">
                                                     <span class="badge-rank <?= $rank_class ?>"><?= $res['rank_label'] ?></span>
                                                 </td>
                                             </tr>
@@ -384,12 +384,12 @@
                                 <table class="table table-custom" id="tableSeni">
                                     <thead>
                                         <tr>
-                                            <th>No</th>
+                                            <th class="text-center">No</th>
                                             <th>Nama Atlet / Kelompok</th>
                                             <th>Kontingen</th>
-                                            <th>Kategori</th>
-                                            <th>Jenis Seni</th>
-                                            <th>Medali</th>
+                                            <th class="text-center">Kategori</th>
+                                            <th class="text-center">Jenis Seni</th>
+                                            <th class="text-center">Medali</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -398,12 +398,12 @@
                                                 $rank_class = 'rank-' . strtolower($res['rank_label']);
                                             ?>
                                             <tr class="result-row">
-                                                <td><?= $no++; ?></td>
-                                                <td class="fw-bold winner-name"><?= $res['winner_name'] ?></td>
+                                                <td class="text-center"><?= $no++; ?></td>
+                                                <td class="fw-bold winner-name"><?= ucwords(strtolower($res['winner_name'])) ?></td>
                                                 <td class="contingent-name"><?= $res['contingent'] ?></td>
-                                                <td><?= $res['age_category'] ?></td>
-                                                <td><span class="badge bg-light text-dark"><?= $res['category_detail'] ?></span></td>
-                                                <td width="150">
+                                                <td class="text-center"><?= $res['age_category'] ?></td>
+                                                <td class="text-center"><span class="badge bg-light text-dark"><?= $res['category_detail'] ?></span></td>
+                                                <td class="text-center" width="150">
                                                     <span class="badge-rank <?= $rank_class ?>"><?= $res['rank_label'] ?></span>
                                                 </td>
                                             </tr>

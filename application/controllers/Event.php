@@ -23,11 +23,25 @@ class Event extends CI_Controller
         $settings_raw = $this->db->get('site_settings')->result_array();
         $data['s'] = array_column($settings_raw, 'nilai', 'parameter');
 
-        // --- 3. KONFIGURASI PAGINATION ---
+        // --- 3. KONFIGURASI PAGINATION & SEARCH ---
+        $keyword = $this->input->get('keyword');
         $config['base_url'] = base_url('event/index');
-        $config['total_rows'] = $this->db->count_all('events');
-        $config['per_page'] = 6; // Menampilkan 6 event per halaman
+        $config['per_page'] = 6;
         $config['uri_segment'] = 3;
+
+        $this->db->from('events');
+        if ($keyword) {
+            $this->db->group_start();
+            $this->db->like('judul', $keyword);
+            $this->db->or_like('tempat', $keyword);
+            $this->db->group_end();
+            
+            $config['suffix'] = '?keyword=' . urlencode($keyword);
+            $config['first_url'] = $config['base_url'] . $config['suffix'];
+        }
+        
+        // Hitung total baris (dengan filter jika ada)
+        $config['total_rows'] = $this->db->count_all_results('', FALSE);
 
         // Styling Pagination menggunakan Bootstrap 5
         $config['full_tag_open']    = '<nav aria-label="Page navigation" class="mt-5"><ul class="pagination justify-content-center">';
@@ -56,7 +70,7 @@ class Event extends CI_Controller
 
         // Ambil data event diurutkan dari yang terbaru
         $this->db->order_by('created_at', 'DESC');
-        $data['events'] = $this->db->get('events', $config['per_page'], $page)->result_array();
+        $data['events'] = $this->db->get('', $config['per_page'], $page)->result_array();
         $data['pagination'] = $this->pagination->create_links();
 
         // Logika AJAX: Jika request datang dari AJAX (klik pagination), 
@@ -149,10 +163,14 @@ class Event extends CI_Controller
                             <li><i class="fas fa-map-marker-alt"></i><div><span class="label-text">Tempat</span><br><span class="value-text">' . $event['tempat'] . '</span></div></li>
                             <li><i class="far fa-clipboard"></i><div><span class="label-text">Batas Pendaftaran</span><br><span class="value-text">' . $event['batas_pendaftaran'] . '</span></div></li>
                         </ul>
-                        <div class="d-grid gap-2">
+                        <div class="d-grid gap-2">';
+            if ($event['status'] == 'Selesai') {
+                $html .= '
                             <a href="' . base_url('event/detail/' . $event['id']) . '" class="btn btn-outline-danger mb-1">
                                 <i class="fas fa-trophy me-2"></i> Lihat Hasil Juara
-                            </a>
+                            </a>';
+            }
+            $html .= '
                             <button class="btn btn-brand btn-detail"
                                 data-title="' . htmlspecialchars($event['judul']) . '"
                                 data-date="' . htmlspecialchars($event['tanggal_pelaksanaan']) . '"

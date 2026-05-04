@@ -663,6 +663,9 @@
         <div class="search-container">
             <div class="input-group">
                 <input type="text" class="form-control search-input" placeholder="Cari nama event atau kota..." aria-label="Search">
+                <button class="btn text-muted d-none" type="button" id="btn-clear-search" style="border: none; background: transparent;">
+                    <i class="fas fa-times"></i>
+                </button>
                 <button class="btn btn-brand search-btn" type="button"><i class="fas fa-search me-2"></i> Cari</button>
             </div>
         </div>
@@ -710,9 +713,11 @@
                                     </li>
                                 </ul>
                                 <div class="d-grid gap-2">
-                                    <a href="<?= base_url('event/detail/' . $event['id']); ?>" class="btn btn-outline-danger mb-1">
-                                        <i class="fas fa-trophy me-2"></i> Lihat Hasil Juara
-                                    </a>
+                                    <?php if ($event['status'] == 'Selesai'): ?>
+                                        <a href="<?= base_url('event/detail/' . $event['id']); ?>" class="btn btn-outline-danger mb-1">
+                                            <i class="fas fa-trophy me-2"></i> Lihat Hasil Juara
+                                        </a>
+                                    <?php endif; ?>
                                     <button class="btn btn-brand btn-detail"
                                         data-title="<?= htmlspecialchars($event['judul']); ?>"
                                         data-date="<?= htmlspecialchars($event['tanggal_pelaksanaan']); ?>"
@@ -930,7 +935,86 @@
                     }
                 });
             }
-        });
+
+        // --- 4. SEARCH LOGIC ---
+        const searchInput = document.querySelector('.search-input');
+        const searchBtn = document.querySelector('.search-btn');
+        const btnClearSearch = document.getElementById('btn-clear-search');
+        let searchTimeout;
+
+        const performSearch = (keyword, shouldScroll = false) => {
+            const url = `<?= base_url('event/index'); ?>?keyword=${encodeURIComponent(keyword)}`;
+
+            if (keyword.length > 0) {
+                btnClearSearch.classList.remove('d-none');
+            } else {
+                btnClearSearch.classList.add('d-none');
+            }
+
+            loader.classList.remove('d-none');
+            eventContainer.style.opacity = '0.3';
+
+            fetch(url, {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    eventContainer.innerHTML = data.html_events;
+                    paginationContainer.innerHTML = data.html_pagination;
+                    if (shouldScroll) {
+                        document.getElementById('events').scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    eventContainer.innerHTML = '<div class="col-12 text-center text-danger"><p>Terjadi kesalahan saat mencari event. Silakan coba lagi.</p></div>';
+                })
+                .finally(() => {
+                    loader.classList.add('d-none');
+                    eventContainer.style.opacity = '1';
+                });
+        };
+
+        if (searchBtn) {
+            searchBtn.addEventListener('click', () => performSearch(searchInput.value, true));
+        }
+
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                const keyword = e.target.value;
+                if (keyword.length > 0) {
+                    btnClearSearch.classList.remove('d-none');
+                } else {
+                    btnClearSearch.classList.add('d-none');
+                }
+
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    performSearch(keyword, false);
+                }, 500);
+            });
+
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    clearTimeout(searchTimeout);
+                    performSearch(searchInput.value, true);
+                }
+            });
+        }
+
+        if (btnClearSearch) {
+            btnClearSearch.addEventListener('click', () => {
+                searchInput.value = '';
+                btnClearSearch.classList.add('d-none');
+                performSearch('', false);
+                searchInput.focus();
+            });
+        }
+    });
 
         // --- 4. DYNAMIC NAVBAR & SCROLLSPY ---
         const navLinks = document.querySelectorAll('.nav-link');
