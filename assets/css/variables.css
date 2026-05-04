@@ -1,0 +1,37 @@
+/* 
+    VARIABLES & CORE DESIGN SYSTEM 
+    Portal Digital Pencak Silat
+*/
+
+:root {
+    /* Brand Colors */
+    --brand-primary: #C60000;
+    --brand-secondary: #FFD700;
+    --brand-dark: #1a1a1a;
+    --brand-light: #f8f9fa;
+    
+    /* Functional Colors */
+    --success: #198754;
+    --info: #0dcaf0;
+    --warning: #ffc107;
+    --danger: #dc3545;
+    
+    /* Spacing & Borders */
+    --border-radius-sm: 8px;
+    --border-radius-md: 15px;
+    --border-radius-lg: 20px;
+    --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    --box-shadow-hover: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Base Typography Configuration */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+h1, h2, h3, h4, h5, h6, .font-oswald, .navbar-brand {
+    font-family: 'Oswald', sans-serif;
+    text-transform: uppercase;
+}

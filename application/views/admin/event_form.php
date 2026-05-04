@@ -17,78 +17,27 @@
     <!-- SweetAlert2 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="<?= base_url('assets/css/variables.css'); ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/css/admin-style.css'); ?>">
     <style>
-        :root {
-            --brand-primary: #C60000;
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f4f6f9;
-        }
-
-        h1,
-        h2,
-        h3,
-        h4,
-        h5 {
-            font-family: 'Oswald', sans-serif;
-            text-transform: uppercase;
-        }
-
-        .card-custom {
-            border: none;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
-        }
-
         .card-header-custom {
             background-color: white;
             border-bottom: 2px solid #eee;
             padding: 20px 25px;
             border-radius: 15px 15px 0 0 !important;
         }
-
-        .form-label {
-            font-weight: 500;
-            color: #555;
-            font-size: 0.9rem;
-        }
-
-        .form-control,
-        .form-select {
-            border-radius: 8px;
-            padding: 10px 15px;
-            border: 1px solid #ddd;
-        }
-
-        .form-control:focus {
-            border-color: var(--brand-primary);
-            box-shadow: 0 0 0 0.2rem rgba(198, 0, 0, 0.1);
-        }
-
-        .btn-brand {
-            background-color: var(--brand-primary);
-            color: white;
-            padding: 10px 30px;
-            border-radius: 50px;
-            font-weight: 600;
-            border: none;
-        }
-
-        .btn-brand:hover {
-            background-color: #a00000;
-            color: white;
-        }
+        .form-label { font-weight: 500; color: #555; font-size: 0.9rem; }
+        .form-control, .form-select { border-radius: 8px; padding: 10px 15px; border: 1px solid #ddd; }
+        .form-control:focus { border-color: var(--brand-primary); box-shadow: 0 0 0 0.2rem rgba(198, 0, 0, 0.1); }
     </style>
 </head>
 
-<body>
+<body class="admin-body">
 
     <div class="container py-5">
         <div class="row justify-content-center">
             <div class="col-lg-8">
-
                 <div class="d-flex align-items-center mb-3">
                     <a href="<?= base_url('admin/dashboard'); ?>" class="text-decoration-none text-muted me-2"><i class="fas fa-arrow-left"></i> Kembali</a>
                 </div>
@@ -101,15 +50,11 @@
                         </h4>
                     </div>
                     <div class="card-body p-4">
-
-                        <!-- Notifikasi Error (jika upload gagal dll) -->
                         <?php if ($this->session->flashdata('error')): ?>
                             <div class="alert alert-danger rounded-3"><i class="fas fa-exclamation-triangle me-2"></i> <?= $this->session->flashdata('error'); ?></div>
                         <?php endif; ?>
 
                         <?= form_open_multipart(isset($event) ? 'admin/update/' . $event['id'] : 'admin/simpan', ['id' => 'eventForm']); ?>
-
-                        <!-- JUDUL -->
                         <div class="mb-3">
                             <label class="form-label">Judul Event <span class="text-danger">*</span></label>
                             <input type="text" name="judul" class="form-control" placeholder="Masukkan nama kejuaraan..." value="<?= isset($event) ? $event['judul'] : ''; ?>" required>
@@ -140,7 +85,6 @@
                             </div>
                         </div>
 
-                        <!-- INPUT LINK PENDAFTARAN (BARU) -->
                         <div class="mb-3">
                             <label class="form-label">Link Website Pendaftaran (Opsional)</label>
                             <div class="input-group">
@@ -154,10 +98,7 @@
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Status Event</label>
                                 <select name="status" class="form-select">
-                                    <?php
-                                    $options = ['Segera Hadir', 'Open Registration', 'Ditutup', 'Selesai'];
-                                    $selected = isset($event) ? $event['status'] : '';
-                                    ?>
+                                    <?php $options = ['Segera Hadir', 'Open Registration', 'Ditutup', 'Selesai']; $selected = isset($event) ? $event['status'] : ''; ?>
                                     <?php foreach ($options as $opt): ?>
                                         <option value="<?= $opt; ?>" <?= ($selected == $opt) ? 'selected' : ''; ?>><?= $opt; ?></option>
                                     <?php endforeach; ?>
@@ -172,22 +113,15 @@
                         <?php if (isset($event)): ?>
                             <div class="mb-4 bg-white p-3 rounded border">
                                 <p class="small fw-bold mb-2">Poster Saat Ini:</p>
-                                <?php
-                                $img_src = $event['poster'];
-                                if (strpos($img_src, 'http') !== 0) $img_src = base_url('assets/uploads/posters/' . $img_src);
-                                ?>
+                                <?php $img_src = $event['poster']; if (strpos($img_src, 'http') !== 0) $img_src = base_url('assets/uploads/posters/' . $img_src); ?>
                                 <img src="<?= $img_src; ?>" alt="Preview" style="height: 120px;" class="rounded shadow-sm">
                             </div>
                         <?php endif; ?>
 
                         <div class="d-grid mt-4">
-                            <button type="submit" class="btn btn-brand py-2">
-                                <i class="fas fa-save me-2"></i> Simpan Data Event
-                            </button>
+                            <button type="submit" class="btn btn-brand py-2"><i class="fas fa-save me-2"></i> Simpan Data Event</button>
                         </div>
-
                         <?= form_close(); ?>
-
                     </div>
                 </div>
             </div>
@@ -196,24 +130,10 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
     <script>
-        // SweetAlert saat submit form agar terlihat loading
         document.querySelector('form').addEventListener('submit', function(e) {
-            // Kita tidak preventDefault agar form tetap tersubmit secara normal ke CI3
-            // Hanya menampilkan loading screen
-            Swal.fire({
-                title: 'Menyimpan Data...',
-                text: 'Mohon tunggu sebentar',
-                icon: 'info',
-                allowOutsideClick: false,
-                showConfirmButton: false,
-                willOpen: () => {
-                    Swal.showLoading()
-                }
-            });
+            Swal.fire({ title: 'Menyimpan Data...', text: 'Mohon tunggu sebentar', icon: 'info', allowOutsideClick: false, showConfirmButton: false, willOpen: () => { Swal.showLoading() } });
         });
     </script>
 </body>
-
 </html>

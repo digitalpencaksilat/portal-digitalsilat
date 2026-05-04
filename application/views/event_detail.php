@@ -14,214 +14,11 @@
     <!-- DataTables Bootstrap 5 -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
 
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="<?= base_url('assets/css/variables.css'); ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/css/main-style.css'); ?>">
     <style>
-        :root {
-            --brand-primary: #C60000;
-            --brand-secondary: #FFD700;
-            --brand-dark: #1a1a1a;
-            --brand-light: #f8f9fa;
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f4f7f6;
-            color: #333;
-            padding-top: 80px;
-        }
-
-        h1, h2, h3, h4, h5, .nav-tabs .nav-link, .navbar-brand {
-            font-family: 'Oswald', sans-serif;
-            text-transform: uppercase;
-        }
-
-        .navbar {
-            background-color: #ffffff;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            padding: 10px 0;
-            transition: all 0.3s;
-        }
-
-        .navbar-brand {
-            color: var(--brand-primary) !important;
-            font-weight: bold;
-            font-size: 1.3rem;
-            letter-spacing: 1px;
-            display: flex;
-            align-items: center;
-        }
-
-        .navbar-brand img {
-            height: 50px;
-            width: auto;
-            margin-right: 12px;
-        }
-
-        .nav-link {
-            color: #555 !important;
-            margin-left: 20px;
-            font-weight: 600;
-            transition: color 0.3s;
-            position: relative;
-        }
-
-        .nav-link:hover,
-        .nav-link.active {
-            color: var(--brand-primary) !important;
-        }
-
-        .nav-link.active::after {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 3px;
-            bottom: -5px;
-            left: 0;
-            background-color: var(--brand-primary);
-            border-radius: 2px;
-        }
-
-        .event-header {
-            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('<?= base_url('assets/carousel/carousel-1.jpg') ?>');
-            background-size: cover;
-            background-position: center;
-            color: white;
-            padding: 60px 0;
-            margin-bottom: 40px;
-            border-bottom: 5px solid var(--brand-primary);
-        }
-
-        .breadcrumb-item a {
-            color: var(--brand-secondary);
-            text-decoration: none;
-        }
-
-        .event-poster-detail {
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            border: 4px solid white;
-        }
-
-        .card-result {
-            border: none;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            overflow: hidden;
-        }
-
-        .nav-tabs {
-            border-bottom: 2px solid #dee2e6;
-            margin-bottom: 20px;
-        }
-
-        .nav-tabs .nav-link {
-            border: none;
-            color: #666;
-            font-weight: 600;
-            padding: 12px 25px;
-            transition: all 0.3s;
-        }
-
-        .nav-tabs .nav-link.active {
-            color: var(--brand-primary);
-            border-bottom: 3px solid var(--brand-primary);
-            background: transparent;
-        }
-
-        .table-custom {
-            border-collapse: separate;
-            border-spacing: 0 8px;
-        }
-
-        .table-custom thead th {
-            border: none;
-            background-color: var(--brand-dark);
-            color: white;
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            padding: 15px;
-        }
-
-        .table-custom tbody tr {
-            background-color: white;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
-            transition: transform 0.2s;
-        }
-
-        .table-custom tbody tr:hover {
-            transform: scale(1.01);
-            background-color: #fff9f9;
-        }
-
-        .table-custom td {
-            padding: 15px;
-            vertical-align: middle;
-            border: none;
-        }
-
-        .badge-rank {
-            padding: 8px 15px;
-            border-radius: 50px;
-            font-weight: 700;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-        }
-
-        .rank-emas { background-color: #FFD700; color: #000; }
-        .rank-perak { background-color: #C0C0C0; color: #000; }
-        .rank-perunggu { background-color: #CD7F32; color: #fff; }
-
-        .info-box {
-            background: white;
-            padding: 20px;
-            border-radius: 15px;
-            border-left: 5px solid var(--brand-primary);
-            margin-bottom: 20px;
-        }
-
-        footer {
-            background-color: #ffffff;
-            padding: 70px 0 30px;
-            border-top: 1px solid #eee;
-            margin-top: 60px;
-        }
-
-        .footer-brand {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            font-family: 'Oswald', sans-serif;
-            color: var(--brand-primary);
-            margin-bottom: 25px;
-            font-weight: bold;
-            line-height: 1.2;
-        }
-
-        .footer-brand img {
-            height: 60px;
-            width: auto;
-        }
-
-        .brand-text {
-            font-size: 1.5rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .btn-brand {
-            background-color: var(--brand-primary);
-            color: white;
-            border: none;
-            padding: 10px 25px;
-            border-radius: 50px;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .btn-brand:hover {
-            background-color: #a00000;
-            color: white;
-        }
-
+        body { padding-top: 80px; }
         /* DataTables Custom Styling */
         .dataTables_wrapper .dataTables_paginate .paginate_button.current {
             background: var(--brand-primary) !important;
@@ -234,14 +31,7 @@
             padding: 5px;
         }
         .dataTables_wrapper .dataTables_filter {
-            display: none; /* Kita pakai search bar custom kita sendiri */
-        }
-        .page-item.active .page-link {
-            background-color: var(--brand-primary) !important;
-            border-color: var(--brand-primary) !important;
-        }
-        .page-link {
-            color: var(--brand-primary);
+            display: none;
         }
     </style>
 </head>
@@ -262,7 +52,7 @@
     </nav>
 
     <!-- Header Section -->
-    <div class="event-header">
+    <div class="event-header" style="background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('<?= base_url('assets/carousel/carousel-1.jpg') ?>');">
         <div class="container">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
@@ -358,8 +148,8 @@
                                             <tr class="result-row">
                                                 <td class="text-center"><?= $no++; ?></td>
                                                 <td class="fw-bold winner-name"><?= ucwords(strtolower($res['winner_name'])) ?></td>
-                                                <td class="contingent-name"><?= $res['contingent'] ?></td>
-                                                <td class="text-center"><?= $res['age_category'] ?></td>
+                                                <td class="contingent-name text-uppercase"><?= strtoupper($res['contingent']) ?></td>
+                                                <td class="text-center"><?= $res['age_category'] . (isset($res['gender']) && $res['gender'] ? ' - ' . strtoupper($res['gender']) : '') ?></td>
                                                 <td class="text-center"><span class="badge bg-light text-dark"><?= $res['category_detail'] ?></span></td>
                                                 <td class="text-center" width="150">
                                                     <span class="badge-rank <?= $rank_class ?>"><?= $res['rank_label'] ?></span>
@@ -400,8 +190,8 @@
                                             <tr class="result-row">
                                                 <td class="text-center"><?= $no++; ?></td>
                                                 <td class="fw-bold winner-name"><?= ucwords(strtolower($res['winner_name'])) ?></td>
-                                                <td class="contingent-name"><?= $res['contingent'] ?></td>
-                                                <td class="text-center"><?= $res['age_category'] ?></td>
+                                                <td class="contingent-name text-uppercase"><?= strtoupper($res['contingent']) ?></td>
+                                                <td class="text-center"><?= $res['age_category'] . (isset($res['gender']) && $res['gender'] ? ' - ' . strtoupper($res['gender']) : '') ?></td>
                                                 <td class="text-center"><span class="badge bg-light text-dark"><?= $res['category_detail'] ?></span></td>
                                                 <td class="text-center" width="150">
                                                     <span class="badge-rank <?= $rank_class ?>"><?= $res['rank_label'] ?></span>

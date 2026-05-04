@@ -51,6 +51,7 @@ class Api extends CI_Controller
                 'category_main'   => $row['category_main'],   // 'tanding' atau 'seni'
                 'category_detail' => $row['category_detail'], // misal: 'Kelas A Putra'
                 'age_category'    => $row['age_category'],    // misal: 'Usia Dini'
+                'gender'          => $row['gender'],          // 'Putra' atau 'Putri'
                 'winner_name'     => $row['winner_name'],
                 'contingent'      => $row['contingent'],
                 'rank_label'      => $row['rank_label']       // 'Emas', 'Perak', 'Perunggu'

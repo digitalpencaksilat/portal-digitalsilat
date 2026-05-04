@@ -7,6 +7,7 @@
     <title>Dashboard Admin - Digital Pencak Silat</title>
 
     <!-- Bootstrap 5 & Icons -->
+    <link rel="shortcut icon" href="<?= base_url('assets/logo/logo.ico'); ?>" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
@@ -19,133 +20,12 @@
     <!-- DataTables Bootstrap 5 CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
 
-    <style>
-        :root {
-            --brand-primary: #C60000;
-            --brand-secondary: #FFD700;
-            --brand-dark: #1a1a1a;
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f4f6f9;
-            color: #333;
-        }
-
-        h1,
-        h2,
-        h3,
-        h4,
-        h5,
-        .navbar-brand {
-            font-family: 'Oswald', sans-serif;
-            text-transform: uppercase;
-        }
-
-        .navbar {
-            background-color: #ffffff;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            padding: 10px 0;
-        }
-
-        .navbar-brand {
-            color: var(--brand-primary) !important;
-            font-weight: bold;
-            font-size: 1.3rem;
-            letter-spacing: 1px;
-            display: flex;
-            align-items: center;
-        }
-
-        .navbar-brand img {
-            height: 45px;
-            width: auto;
-            margin-right: 12px;
-        }
-
-        .btn-brand {
-            background-color: var(--brand-primary);
-            color: white;
-            border: 2px solid var(--brand-primary);
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .btn-brand:hover {
-            background-color: white;
-            color: var(--brand-primary);
-        }
-
-        .card-custom {
-            border: none;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
-            overflow: hidden;
-            background: white;
-        }
-
-        /* Header Tabel Merah */
-        .table-head-custom {
-            background-color: var(--brand-primary) !important;
-        }
-
-        table.dataTable thead th {
-            color: white !important;
-            border-bottom: none !important;
-            background-color: var(--brand-primary) !important;
-        }
-
-        #tableEvents tbody td {
-            color: #333 !important;
-            vertical-align: middle;
-        }
-
-        .table-hover tbody tr:hover {
-            background-color: rgba(198, 0, 0, 0.02);
-        }
-
-        /* --- STATISTIC CARDS --- */
-        .stat-card {
-            border: none;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s;
-            height: 100%;
-            background: white;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .stat-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-        }
-
-        /* --- DATATABLES --- */
-        .page-item.active .page-link {
-            background-color: var(--brand-primary) !important;
-            border-color: var(--brand-primary) !important;
-            color: white !important;
-        }
-
-        .page-link {
-            color: var(--brand-primary);
-        }
-
-        .dataTables_wrapper {
-            padding: 20px;
-        }
-    </style>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="<?= base_url('assets/css/variables.css'); ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/css/admin-style.css'); ?>">
 </head>
 
-<body>
+<body class="admin-body">
 
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light sticky-top">
@@ -167,10 +47,9 @@
 
     <div class="container py-5">
 
-        <!-- --- SECTION STATISTIK PENGUNJUNG (SESUAI CONTROLLER) --- -->
+        <!-- --- SECTION STATISTIK PENGUNJUNG --- -->
         <h5 class="fw-bold mb-3 font-oswald text-secondary"><i class="fas fa-chart-line me-2"></i> STATISTIK PENGUNJUNG</h5>
         <div class="row g-4 mb-5">
-            <!-- Pengunjung Hari Ini -->
             <div class="col-md-6 col-lg-6">
                 <div class="card stat-card border-start border-4 border-primary">
                     <div class="card-body p-4 d-flex align-items-center justify-content-between">
@@ -185,7 +64,6 @@
                 </div>
             </div>
 
-            <!-- Total Pengunjung -->
             <div class="col-md-6 col-lg-6">
                 <div class="card stat-card border-start border-4 border-dark">
                     <div class="card-body p-4 d-flex align-items-center justify-content-between">
@@ -204,7 +82,6 @@
         <!-- --- SECTION STATISTIK EVENT --- -->
         <h5 class="fw-bold mb-3 font-oswald text-secondary"><i class="fas fa-calendar-alt me-2"></i> DATA EVENT</h5>
         <div class="row g-4 mb-5">
-            <!-- Total Events -->
             <div class="col-md-6 col-lg-3">
                 <div class="card stat-card border-start border-4 border-danger">
                     <div class="card-body p-3 d-flex align-items-center justify-content-between">
@@ -219,7 +96,6 @@
                 </div>
             </div>
 
-            <!-- Open Registration -->
             <div class="col-md-6 col-lg-3">
                 <div class="card stat-card border-start border-4 border-warning">
                     <div class="card-body p-3 d-flex align-items-center justify-content-between">
@@ -234,7 +110,6 @@
                 </div>
             </div>
 
-            <!-- Coming Soon -->
             <div class="col-md-6 col-lg-3">
                 <div class="card stat-card border-start border-4 border-info">
                     <div class="card-body p-3 d-flex align-items-center justify-content-between">
@@ -249,7 +124,6 @@
                 </div>
             </div>
 
-            <!-- Finished -->
             <div class="col-md-6 col-lg-3">
                 <div class="card stat-card border-start border-4 border-success">
                     <div class="card-body p-3 d-flex align-items-center justify-content-between">
@@ -275,7 +149,6 @@
             </a>
         </div>
 
-        <!-- CARD TABEL -->
         <div class="card card-custom">
             <div class="card-body p-0">
                 <div class="table-responsive">
@@ -292,8 +165,7 @@
                         </thead>
                         <tbody>
                             <?php if (!empty($events)): ?>
-                                <?php $no = 1;
-                                foreach ($events as $ev): ?>
+                                <?php $no = 1; foreach ($events as $ev): ?>
                                     <tr>
                                         <td class="ps-4 fw-bold"><?= $no++; ?></td>
                                         <td>
@@ -302,25 +174,16 @@
                                             if (strpos($img_src, 'http') !== 0) $img_src = base_url('assets/uploads/posters/' . $img_src);
                                             ?>
                                             <div class="ratio ratio-4x3 rounded overflow-hidden shadow-sm" style="width: 80px;">
-                                                <img src="<?= $img_src; ?>" class="object-fit-cover" alt="Poster" onerror="this.src='https://via.placeholder.com/80x60?text=No+Img'">
+                                                <img src="<?= $img_src; ?>" class="object-fit-cover" alt="Poster" onerror="this.src='https://via.placeholder.com/800x600?text=No+Img'">
                                             </div>
                                         </td>
                                         <td>
                                             <h6 class="fw-bold mb-1 text-dark"><?= $ev['judul']; ?></h6>
                                             <small class="text-muted"><i class="fas fa-map-marker-alt text-danger me-1"></i> <?= $ev['tempat']; ?></small>
-
                                             <?php if (!empty($ev['link_pendaftaran'])): ?>
-                                                <div class="mt-1">
-                                                    <span class="badge bg-light text-primary border border-primary">
-                                                        <i class="fas fa-link me-1"></i> Link Website Aktif
-                                                    </span>
-                                                </div>
+                                                <div class="mt-1"><span class="badge bg-light text-primary border border-primary"><i class="fas fa-link me-1"></i> Link Website Aktif</span></div>
                                             <?php else: ?>
-                                                <div class="mt-1">
-                                                    <span class="badge bg-light text-success border border-success">
-                                                        <i class="fab fa-whatsapp me-1"></i> via WhatsApp
-                                                    </span>
-                                                </div>
+                                                <div class="mt-1"><span class="badge bg-light text-success border border-success"><i class="fab fa-whatsapp me-1"></i> via WhatsApp</span></div>
                                             <?php endif; ?>
                                         </td>
                                         <td>
@@ -337,12 +200,8 @@
                                             <span class="badge bg-<?= $badge; ?> rounded-pill px-3"><?= $ev['status']; ?></span>
                                         </td>
                                         <td class="text-end pe-4">
-                                            <a href="<?= base_url('admin/edit/' . $ev['id']); ?>" class="btn btn-sm btn-light text-primary border me-1" title="Edit">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                            <a href="<?= base_url('admin/hapus/' . $ev['id']); ?>" class="btn btn-sm btn-light text-danger border btn-hapus" title="Hapus">
-                                                <i class="fas fa-trash"></i>
-                                            </a>
+                                            <a href="<?= base_url('admin/edit/' . $ev['id']); ?>" class="btn btn-sm btn-light text-primary border me-1" title="Edit"><i class="fas fa-edit"></i></a>
+                                            <a href="<?= base_url('admin/hapus/' . $ev['id']); ?>" class="btn btn-sm btn-light text-danger border btn-hapus" title="Hapus"><i class="fas fa-trash"></i></a>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -370,37 +229,18 @@
     <script>
         $(document).ready(function() {
             $('#tableEvents').DataTable({
-                language: {
-                    url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/id.json'
-                },
-                columnDefs: [{
-                    orderable: false,
-                    targets: [1, 5]
-                }],
-                dom: "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
-                    "<'row'<'col-sm-12'tr>>" +
-                    "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+                language: { url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/id.json' },
+                columnDefs: [{ orderable: false, targets: [1, 5] }],
+                dom: "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" + "<'row'<'col-sm-12'tr>>" + "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
             });
         });
 
         <?php if ($this->session->flashdata('success')): ?>
-            Swal.fire({
-                icon: 'success',
-                title: 'Berhasil!',
-                text: '<?= $this->session->flashdata('success'); ?>',
-                confirmButtonColor: '#C60000',
-                timer: 2000,
-                showConfirmButton: false
-            });
+            Swal.fire({ icon: 'success', title: 'Berhasil!', text: '<?= $this->session->flashdata('success'); ?>', confirmButtonColor: '#C60000', timer: 2000, showConfirmButton: false });
         <?php endif; ?>
 
         <?php if ($this->session->flashdata('error')): ?>
-            Swal.fire({
-                icon: 'error',
-                title: 'Gagal!',
-                text: '<?= $this->session->flashdata('error'); ?>',
-                confirmButtonColor: '#C60000'
-            });
+            Swal.fire({ icon: 'error', title: 'Gagal!', text: '<?= $this->session->flashdata('error'); ?>', confirmButtonColor: '#C60000' });
         <?php endif; ?>
 
         $(document).on('click', '.btn-hapus', function(e) {
@@ -415,9 +255,7 @@
                 cancelButtonColor: '#6c757d',
                 confirmButtonText: 'Ya, Hapus!',
                 cancelButtonText: 'Batal'
-            }).then((result) => {
-                if (result.isConfirmed) window.location.href = href;
-            });
+            }).then((result) => { if (result.isConfirmed) window.location.href = href; });
         });
 
         $('#btn-logout').on('click', function(e) {
@@ -430,9 +268,7 @@
                 confirmButtonColor: '#C60000',
                 cancelButtonColor: '#6c757d',
                 confirmButtonText: 'Logout'
-            }).then((result) => {
-                if (result.isConfirmed) window.location.href = href;
-            });
+            }).then((result) => { if (result.isConfirmed) window.location.href = href; });
         });
     </script>
 </body>

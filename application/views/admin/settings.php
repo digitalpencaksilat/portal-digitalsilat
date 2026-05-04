@@ -16,92 +16,25 @@
     <!-- SweetAlert2 CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
-    <style>
-        /* Menggunakan style yang sama persis dengan Dashboard */
-        :root {
-            --brand-primary: #C60000;
-            --brand-secondary: #FFD700;
-            --brand-dark: #1a1a1a;
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f4f6f9;
-            color: #333;
-        }
-
-        h1,
-        h2,
-        h3,
-        h4,
-        h5,
-        .navbar-brand {
-            font-family: 'Oswald', sans-serif;
-            text-transform: uppercase;
-        }
-
-        .navbar {
-            background-color: #ffffff;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            padding: 10px 0;
-        }
-
-        .navbar-brand {
-            color: var(--brand-primary) !important;
-            font-weight: bold;
-            font-size: 1.3rem;
-            letter-spacing: 1px;
-            display: flex;
-            align-items: center;
-        }
-
-        .navbar-brand img {
-            height: 45px;
-            width: auto;
-            margin-right: 12px;
-        }
-
-        .btn-brand {
-            background-color: var(--brand-primary);
-            color: white;
-            border: 2px solid var(--brand-primary);
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .btn-brand:hover {
-            background-color: white;
-            color: var(--brand-primary);
-        }
-
-        .card-custom {
-            border: none;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
-            background: white;
-        }
-    </style>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="<?= base_url('assets/css/variables.css'); ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/css/admin-style.css'); ?>">
 </head>
 
-<body>
+<body class="admin-body">
 
-    <!-- Navbar (Sama Model dengan Dashboard) -->
+    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light sticky-top">
         <div class="container">
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand" href="<?= base_url('admin/dashboard'); ?>">
                 <img src="<?= base_url('assets/logo/logo.png'); ?>" alt="Logo">
                 ADMIN PANEL
             </a>
             <div class="d-flex align-items-center">
-                <!-- Tombol navigasi disesuaikan untuk kembali ke Dashboard -->
                 <a href="<?= base_url('admin/dashboard'); ?>" class="btn btn-outline-dark btn-sm me-2">
                     <i class="fas fa-arrow-left me-1"></i> Kembali ke Dashboard
                 </a>
-
-                <!-- Info User (Sama seperti Dashboard) -->
                 <span class="d-none d-md-block me-3 text-muted">Hai, <strong><?= $this->session->userdata('nama'); ?></strong></span>
-
-                <!-- Tombol Logout (Sama seperti Dashboard) -->
                 <a href="<?= base_url('admin/logout'); ?>" class="btn btn-outline-danger btn-sm" id="btn-logout">
                     <i class="fas fa-sign-out-alt me-1"></i> Logout
                 </a>
@@ -165,19 +98,10 @@
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 
     <script>
-        // Notifikasi Sukses Simpan
         <?php if ($this->session->flashdata('success')): ?>
-            Swal.fire({
-                icon: 'success',
-                title: 'Berhasil!',
-                text: '<?= $this->session->flashdata('success'); ?>',
-                confirmButtonColor: '#C60000',
-                timer: 2000,
-                showConfirmButton: false
-            });
+            Swal.fire({ icon: 'success', title: 'Berhasil!', text: '<?= $this->session->flashdata('success'); ?>', confirmButtonColor: '#C60000', timer: 2000, showConfirmButton: false });
         <?php endif; ?>
 
-        // Konfirmasi Logout
         $('#btn-logout').on('click', function(e) {
             e.preventDefault();
             const href = $(this).attr('href');
@@ -189,11 +113,8 @@
                 cancelButtonColor: '#6c757d',
                 confirmButtonText: 'Logout',
                 cancelButtonText: 'Batal'
-            }).then((result) => {
-                if (result.isConfirmed) window.location.href = href;
-            });
+            }).then((result) => { if (result.isConfirmed) window.location.href = href; });
         });
     </script>
 </body>
-
 </html>

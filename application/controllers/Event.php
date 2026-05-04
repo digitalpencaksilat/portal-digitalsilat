@@ -111,6 +111,7 @@ class Event extends CI_Controller
         // Pisahkan Kategori Tanding
         $this->db->where(['event_id' => $id, 'category_main' => 'tanding']);
         $this->db->order_by('age_category', 'ASC');
+        $this->db->order_by('gender', 'ASC');
         $this->db->order_by('category_detail', 'ASC');
         $this->db->order_by('rank_label', 'ASC');
         $data['results_tanding'] = $this->db->get('event_results')->result_array();
@@ -118,6 +119,7 @@ class Event extends CI_Controller
         // Pisahkan Kategori Seni
         $this->db->where(['event_id' => $id, 'category_main' => 'seni']);
         $this->db->order_by('age_category', 'ASC');
+        $this->db->order_by('gender', 'ASC');
         $this->db->order_by('category_detail', 'ASC');
         $this->db->order_by('rank_label', 'ASC');
         $data['results_seni'] = $this->db->get('event_results')->result_array();
