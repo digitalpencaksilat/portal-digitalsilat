@@ -54,6 +54,7 @@ class Api extends CI_Controller
                 'gender'          => $row['gender'],          // 'Putra' atau 'Putri'
                 'winner_name'     => $row['winner_name'],
                 'contingent'      => $row['contingent'],
+                'school'          => (isset($row['school']) && $row['school'] !== '') ? $row['school'] : null, // opsional, bisa null untuk payload lama
                 'rank_label'      => $row['rank_label']       // 'Emas', 'Perak', 'Perunggu'
             ];
         }

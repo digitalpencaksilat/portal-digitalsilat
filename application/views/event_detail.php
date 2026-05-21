@@ -135,6 +135,7 @@
                                             <th class="text-center">No</th>
                                             <th>Nama Atlet</th>
                                             <th>Kontingen</th>
+                                            <th>Asal Sekolah</th>
                                             <th class="text-center">Kategori</th>
                                             <th class="text-center">Kelas</th>
                                             <th class="text-center">Medali</th>
@@ -144,11 +145,19 @@
                                         <?php $no = 1; foreach($results_tanding as $res): ?>
                                             <?php 
                                                 $rank_class = 'rank-' . strtolower($res['rank_label']);
+                                                $school_value = isset($res['school']) ? trim((string) $res['school']) : '';
                                             ?>
                                             <tr class="result-row">
                                                 <td class="text-center"><?= $no++; ?></td>
                                                 <td class="fw-bold winner-name"><?= ucwords(strtolower($res['winner_name'])) ?></td>
                                                 <td class="contingent-name text-uppercase"><?= strtoupper($res['contingent']) ?></td>
+                                                <td class="school-name">
+                                                    <?php if ($school_value !== ''): ?>
+                                                        <?= htmlspecialchars($school_value, ENT_QUOTES, 'UTF-8') ?>
+                                                    <?php else: ?>
+                                                        <span class="text-muted">-</span>
+                                                    <?php endif; ?>
+                                                </td>
                                                 <td class="text-center"><?= $res['age_category'] . (isset($res['gender']) && $res['gender'] ? ' - ' . strtoupper($res['gender']) : '') ?></td>
                                                 <td class="text-center"><span class="badge bg-light text-dark"><?= $res['category_detail'] ?></span></td>
                                                 <td class="text-center" width="150">
@@ -177,6 +186,7 @@
                                             <th class="text-center">No</th>
                                             <th>Nama Atlet / Kelompok</th>
                                             <th>Kontingen</th>
+                                            <th>Asal Sekolah</th>
                                             <th class="text-center">Kategori</th>
                                             <th class="text-center">Jenis Seni</th>
                                             <th class="text-center">Medali</th>
@@ -186,11 +196,19 @@
                                         <?php $no = 1; foreach($results_seni as $res): ?>
                                             <?php 
                                                 $rank_class = 'rank-' . strtolower($res['rank_label']);
+                                                $school_value = isset($res['school']) ? trim((string) $res['school']) : '';
                                             ?>
                                             <tr class="result-row">
                                                 <td class="text-center"><?= $no++; ?></td>
                                                 <td class="fw-bold winner-name"><?= ucwords(strtolower($res['winner_name'])) ?></td>
                                                 <td class="contingent-name text-uppercase"><?= strtoupper($res['contingent']) ?></td>
+                                                <td class="school-name">
+                                                    <?php if ($school_value !== ''): ?>
+                                                        <?= htmlspecialchars($school_value, ENT_QUOTES, 'UTF-8') ?>
+                                                    <?php else: ?>
+                                                        <span class="text-muted">-</span>
+                                                    <?php endif; ?>
+                                                </td>
                                                 <td class="text-center"><?= $res['age_category'] . (isset($res['gender']) && $res['gender'] ? ' - ' . strtoupper($res['gender']) : '') ?></td>
                                                 <td class="text-center"><span class="badge bg-light text-dark"><?= $res['category_detail'] ?></span></td>
                                                 <td class="text-center" width="150">
