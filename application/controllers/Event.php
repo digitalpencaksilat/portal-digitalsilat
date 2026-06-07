@@ -35,13 +35,17 @@ class Event extends CI_Controller
             $this->db->like('judul', $keyword);
             $this->db->or_like('tempat', $keyword);
             $this->db->group_end();
-            
+
             $config['suffix'] = '?keyword=' . urlencode($keyword);
             $config['first_url'] = $config['base_url'] . $config['suffix'];
         }
-        
+
+        $events = $this->db->get()->result_array();
+        $events = $this->_prepare_events($events);
+        usort($events, [$this, '_sort_events_by_closest_date']);
+
         // Hitung total baris (dengan filter jika ada)
-        $config['total_rows'] = $this->db->count_all_results('', FALSE);
+        $config['total_rows'] = count($events);
 
         // Styling Pagination menggunakan Bootstrap 5
         $config['full_tag_open']    = '<nav aria-label="Page navigation" class="mt-5"><ul class="pagination justify-content-center">';
@@ -66,11 +70,8 @@ class Event extends CI_Controller
 
         $this->pagination->initialize($config);
 
-        $page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
-
-        // Ambil data event diurutkan dari yang terbaru
-        $this->db->order_by('created_at', 'DESC');
-        $data['events'] = $this->db->get('', $config['per_page'], $page)->result_array();
+        $page = ($this->uri->segment(3)) ? (int) $this->uri->segment(3) : 0;
+        $data['events'] = array_slice($events, $page, $config['per_page']);
         $data['pagination'] = $this->pagination->create_links();
 
         // Logika AJAX: Jika request datang dari AJAX (klik pagination), 
@@ -107,6 +108,9 @@ class Event extends CI_Controller
         $data['event'] = $this->db->get_where('events', ['id' => $id])->row_array();
         if (!$data['event']) show_404();
 
+        $data['event']['tanggal_pelaksanaan_display'] = $this->_format_date_range($data['event']['tanggal_mulai'], $data['event']['tanggal_selesai']);
+        $data['event']['batas_pendaftaran_display'] = $this->_format_display_date($data['event']['batas_pendaftaran']);
+
         // 2. Ambil Data Hasil Kejuaraan
         // Pisahkan Kategori Tanding
         $this->db->where(['event_id' => $id, 'category_main' => 'tanding']);
@@ -129,6 +133,137 @@ class Event extends CI_Controller
         $data['s'] = array_column($settings_raw, 'nilai', 'parameter');
 
         $this->load->view('event_detail', $data);
+    }
+
+    private function _prepare_events($events)
+    {
+        foreach ($events as &$event) {
+            $event['_tanggal_timestamp'] = $this->_parse_event_date($event['tanggal_mulai']);
+            $event['tanggal_pelaksanaan_display'] = $this->_format_date_range($event['tanggal_mulai'], $event['tanggal_selesai']);
+            $event['batas_pendaftaran_display'] = $this->_format_display_date($event['batas_pendaftaran']);
+        }
+        unset($event);
+
+        return $events;
+    }
+
+    public function _sort_events_by_closest_date($event_a, $event_b)
+    {
+        $today = strtotime(date('Y-m-d'));
+        $timestamp_a = !empty($event_a['_tanggal_timestamp']) ? $event_a['_tanggal_timestamp'] : null;
+        $timestamp_b = !empty($event_b['_tanggal_timestamp']) ? $event_b['_tanggal_timestamp'] : null;
+
+        $group_a = $this->_resolve_event_sort_group($timestamp_a, $today);
+        $group_b = $this->_resolve_event_sort_group($timestamp_b, $today);
+
+        if ($group_a !== $group_b) {
+            return $group_a <=> $group_b;
+        }
+
+        if ($timestamp_a === $timestamp_b) {
+            return strcmp($event_b['created_at'], $event_a['created_at']);
+        }
+
+        if ($group_a === 0) {
+            return $timestamp_a <=> $timestamp_b;
+        }
+
+        if ($group_a === 1) {
+            return $timestamp_b <=> $timestamp_a;
+        }
+
+        return strcmp($event_b['created_at'], $event_a['created_at']);
+    }
+
+    private function _resolve_event_sort_group($timestamp, $today)
+    {
+        if (empty($timestamp)) {
+            return 2;
+        }
+
+        return $timestamp >= $today ? 0 : 1;
+    }
+
+    private function _parse_event_date($value)
+    {
+        if (empty($value)) {
+            return null;
+        }
+
+        if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $value)) {
+            return strtotime($value);
+        }
+
+        $months = [
+            'januari' => '01',
+            'februari' => '02',
+            'maret' => '03',
+            'april' => '04',
+            'mei' => '05',
+            'juni' => '06',
+            'juli' => '07',
+            'agustus' => '08',
+            'september' => '09',
+            'oktober' => '10',
+            'november' => '11',
+            'desember' => '12'
+        ];
+
+        $value = trim($value);
+        if (preg_match('/^(\d{1,2})(?:\s*-\s*\d{1,2})?\s+([A-Za-z]+)\s+(\d{4})$/u', $value, $matches)) {
+            $month_name = strtolower($matches[2]);
+            if (isset($months[$month_name])) {
+                return strtotime($matches[3] . '-' . $months[$month_name] . '-' . str_pad($matches[1], 2, '0', STR_PAD_LEFT));
+            }
+        }
+
+        $timestamp = strtotime($value);
+        return $timestamp !== false ? $timestamp : null;
+    }
+
+    private function _format_display_date($value)
+    {
+        $timestamp = $this->_parse_event_date($value);
+        if ($timestamp === null) {
+            return !empty($value) ? $value : '-';
+        }
+
+        $months = [
+            1 => 'Januari',
+            2 => 'Februari',
+            3 => 'Maret',
+            4 => 'April',
+            5 => 'Mei',
+            6 => 'Juni',
+            7 => 'Juli',
+            8 => 'Agustus',
+            9 => 'September',
+            10 => 'Oktober',
+            11 => 'November',
+            12 => 'Desember'
+        ];
+
+        return date('d', $timestamp) . ' ' . $months[(int) date('n', $timestamp)] . ' ' . date('Y', $timestamp);
+    }
+
+    private function _format_date_range($tanggal_mulai, $tanggal_selesai)
+    {
+        if (empty($tanggal_mulai) && empty($tanggal_selesai)) {
+            return '-';
+        }
+
+        $mulai_display = $this->_format_display_date($tanggal_mulai);
+        $selesai_display = $this->_format_display_date($tanggal_selesai);
+
+        if (empty($tanggal_mulai) || $tanggal_mulai === $tanggal_selesai) {
+            return $selesai_display;
+        }
+
+        if (empty($tanggal_selesai)) {
+            return $mulai_display;
+        }
+
+        return $mulai_display . ' - ' . $selesai_display;
     }
 
     // Helper untuk me-render HTML Event Card saat request AJAX
@@ -161,9 +296,9 @@ class Event extends CI_Controller
                     <div class="card-body">
                         <h3 class="event-title">' . $event['judul'] . '</h3>
                         <ul class="info-list">
-                            <li><i class="far fa-calendar-alt"></i><div><span class="label-text">Pelaksanaan</span><br><span class="value-text">' . $event['tanggal_pelaksanaan'] . '</span></div></li>
+                            <li><i class="far fa-calendar-alt"></i><div><span class="label-text">Pelaksanaan</span><br><span class="value-text">' . $event['tanggal_pelaksanaan_display'] . '</span></div></li>
                             <li><i class="fas fa-map-marker-alt"></i><div><span class="label-text">Tempat</span><br><span class="value-text">' . $event['tempat'] . '</span></div></li>
-                            <li><i class="far fa-clipboard"></i><div><span class="label-text">Batas Pendaftaran</span><br><span class="value-text">' . $event['batas_pendaftaran'] . '</span></div></li>
+                            <li><i class="far fa-clipboard"></i><div><span class="label-text">Batas Pendaftaran</span><br><span class="value-text">' . $event['batas_pendaftaran_display'] . '</span></div></li>
                         </ul>
                         <div class="d-grid gap-2">';
             if ($event['status'] == 'Selesai') {
@@ -175,9 +310,9 @@ class Event extends CI_Controller
             $html .= '
                             <button class="btn btn-brand btn-detail"
                                 data-title="' . htmlspecialchars($event['judul']) . '"
-                                data-date="' . htmlspecialchars($event['tanggal_pelaksanaan']) . '"
+                                data-date="' . htmlspecialchars($event['tanggal_pelaksanaan_display']) . '"
                                 data-place="' . htmlspecialchars($event['tempat']) . '"
-                                data-deadline="' . htmlspecialchars($event['batas_pendaftaran']) . '"
+                                data-deadline="' . htmlspecialchars($event['batas_pendaftaran_display']) . '"
                                 data-poster="' . $img . '"
                                 data-status="' . $event['status'] . '"
                                 data-link="' . $link . '"

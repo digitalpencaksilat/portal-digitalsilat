@@ -216,13 +216,13 @@
                                 <h3 class="event-title"><?= $event['judul']; ?></h3>
                                 <ul class="info-list">
                                     <li><i class="far fa-calendar-alt"></i>
-                                        <div><span class="label-text">Pelaksanaan</span><br><span class="value-text"><?= $event['tanggal_pelaksanaan']; ?></span></div>
+                                        <div><span class="label-text">Pelaksanaan</span><br><span class="value-text"><?= $event['tanggal_pelaksanaan_display']; ?></span></div>
                                     </li>
                                     <li><i class="fas fa-map-marker-alt"></i>
                                         <div><span class="label-text">Tempat</span><br><span class="value-text"><?= $event['tempat']; ?></span></div>
                                     </li>
                                     <li><i class="far fa-clipboard"></i>
-                                        <div><span class="label-text">Batas Pendaftaran</span><br><span class="value-text"><?= $event['batas_pendaftaran']; ?></span></div>
+                                        <div><span class="label-text">Batas Pendaftaran</span><br><span class="value-text"><?= $event['batas_pendaftaran_display']; ?></span></div>
                                     </li>
                                 </ul>
                                 <div class="d-grid gap-2">
@@ -233,9 +233,9 @@
                                     <?php endif; ?>
                                     <button class="btn btn-brand btn-detail"
                                         data-title="<?= htmlspecialchars($event['judul']); ?>"
-                                        data-date="<?= htmlspecialchars($event['tanggal_pelaksanaan']); ?>"
+                                        data-date="<?= htmlspecialchars($event['tanggal_pelaksanaan_display']); ?>"
                                         data-place="<?= htmlspecialchars($event['tempat']); ?>"
-                                        data-deadline="<?= htmlspecialchars($event['batas_pendaftaran']); ?>"
+                                        data-deadline="<?= htmlspecialchars($event['batas_pendaftaran_display']); ?>"
                                         data-poster="<?= $img_src; ?>"
                                         data-status="<?= $event['status']; ?>"
                                         data-link="<?= $link_daftar; ?>"

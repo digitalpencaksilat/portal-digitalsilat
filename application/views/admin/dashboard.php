@@ -187,8 +187,8 @@
                                             <?php endif; ?>
                                         </td>
                                         <td>
-                                            <small class="d-block fw-bold"><?= $ev['tanggal_pelaksanaan']; ?></small>
-                                            <small class="text-muted" style="font-size: 0.75rem;">Deadline: <?= $ev['batas_pendaftaran']; ?></small>
+                                            <small class="d-block fw-bold"><?= $ev['tanggal_pelaksanaan_display']; ?></small>
+                                            <small class="text-muted" style="font-size: 0.75rem;">Deadline: <?= $ev['batas_pendaftaran_display']; ?></small>
                                         </td>
                                         <td>
                                             <?php

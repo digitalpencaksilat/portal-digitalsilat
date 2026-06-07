@@ -81,10 +81,180 @@ class Admin extends CI_Controller
         $data['visitor_total'] = $this->db->count_all('visitors');
 
         // --- C. Ambil Data Event untuk Tabel ---
-        $this->db->order_by('created_at', 'DESC');
-        $data['events'] = $this->db->get('events')->result_array();
+        $events = $this->db->get('events')->result_array();
+        foreach ($events as &$event) {
+            $event['_tanggal_mulai_timestamp'] = !empty($event['tanggal_mulai']) ? strtotime($event['tanggal_mulai']) : null;
+            $event['tanggal_pelaksanaan_display'] = $this->_format_date_range($event['tanggal_mulai'], $event['tanggal_selesai']);
+            $event['batas_pendaftaran_display'] = $this->_format_display_date($event['batas_pendaftaran']);
+        }
+        unset($event);
+        usort($events, [$this, '_sort_events_by_closest_start']);
+        $data['events'] = $events;
 
         $this->load->view('admin/dashboard', $data);
+    }
+
+    private function _format_display_date($value)
+    {
+        if (empty($value)) {
+            return '-';
+        }
+
+        $timestamp = strtotime($value);
+        if ($timestamp === false) {
+            $normalized = $this->_normalize_date_for_input($value);
+            $timestamp = !empty($normalized) ? strtotime($normalized) : false;
+        }
+
+        if ($timestamp === false) {
+            return $value;
+        }
+
+        $months = [
+            1 => 'Januari',
+            2 => 'Februari',
+            3 => 'Maret',
+            4 => 'April',
+            5 => 'Mei',
+            6 => 'Juni',
+            7 => 'Juli',
+            8 => 'Agustus',
+            9 => 'September',
+            10 => 'Oktober',
+            11 => 'November',
+            12 => 'Desember'
+        ];
+
+        return date('d', $timestamp) . ' ' . $months[(int) date('n', $timestamp)] . ' ' . date('Y', $timestamp);
+    }
+
+    private function _normalize_date_for_input($value)
+    {
+        if (empty($value)) {
+            return '';
+        }
+
+        if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $value)) {
+            return $value;
+        }
+
+        $months = [
+            'januari' => '01',
+            'februari' => '02',
+            'maret' => '03',
+            'april' => '04',
+            'mei' => '05',
+            'juni' => '06',
+            'juli' => '07',
+            'agustus' => '08',
+            'september' => '09',
+            'oktober' => '10',
+            'november' => '11',
+            'desember' => '12'
+        ];
+
+        $value = trim($value);
+
+        if (preg_match('/^(\d{1,2})(?:\s*-\s*\d{1,2})?\s+([A-Za-z]+)\s+(\d{4})$/u', $value, $matches)) {
+            $day = str_pad($matches[1], 2, '0', STR_PAD_LEFT);
+            $month_name = strtolower($matches[2]);
+            $year = $matches[3];
+
+            if (isset($months[$month_name])) {
+                return $year . '-' . $months[$month_name] . '-' . $day;
+            }
+        }
+
+        $timestamp = strtotime($value);
+        if ($timestamp !== false) {
+            return date('Y-m-d', $timestamp);
+        }
+
+        return '';
+    }
+
+    private function _format_date_range($tanggal_mulai, $tanggal_selesai)
+    {
+        if (empty($tanggal_mulai) && empty($tanggal_selesai)) {
+            return '-';
+        }
+
+        $mulai_display = $this->_format_display_date($tanggal_mulai);
+        $selesai_display = $this->_format_display_date($tanggal_selesai);
+
+        if (empty($tanggal_mulai) || $tanggal_mulai === $tanggal_selesai) {
+            return $selesai_display;
+        }
+
+        if (empty($tanggal_selesai)) {
+            return $mulai_display;
+        }
+
+        return $mulai_display . ' - ' . $selesai_display;
+    }
+
+    private function _has_valid_date_range($tanggal_mulai, $tanggal_selesai)
+    {
+        if (empty($tanggal_mulai) || empty($tanggal_selesai)) {
+            return false;
+        }
+
+        return strtotime($tanggal_mulai) <= strtotime($tanggal_selesai);
+    }
+
+    private function _sort_events_by_closest_start($event_a, $event_b)
+    {
+        $today = strtotime(date('Y-m-d'));
+        $timestamp_a = !empty($event_a['_tanggal_mulai_timestamp']) ? $event_a['_tanggal_mulai_timestamp'] : null;
+        $timestamp_b = !empty($event_b['_tanggal_mulai_timestamp']) ? $event_b['_tanggal_mulai_timestamp'] : null;
+
+        $group_a = $this->_resolve_event_sort_group($timestamp_a, $today);
+        $group_b = $this->_resolve_event_sort_group($timestamp_b, $today);
+
+        if ($group_a !== $group_b) {
+            return $group_a <=> $group_b;
+        }
+
+        if ($timestamp_a === $timestamp_b) {
+            return strcmp($event_b['created_at'], $event_a['created_at']);
+        }
+
+        if ($group_a === 0) {
+            return $timestamp_a <=> $timestamp_b;
+        }
+
+        if ($group_a === 1) {
+            return $timestamp_b <=> $timestamp_a;
+        }
+
+        return strcmp($event_b['created_at'], $event_a['created_at']);
+    }
+
+    private function _resolve_event_sort_group($timestamp, $today)
+    {
+        if (empty($timestamp)) {
+            return 2;
+        }
+
+        return $timestamp >= $today ? 0 : 1;
+    }
+
+    private function _collect_event_payload()
+    {
+        $tanggal_mulai = $this->input->post('tanggal_mulai');
+        $tanggal_selesai = $this->input->post('tanggal_selesai');
+
+        return [
+            'judul' => $this->input->post('judul'),
+            'slug' => url_title($this->input->post('judul'), 'dash', TRUE),
+            'tanggal_pelaksanaan' => $tanggal_mulai,
+            'tanggal_mulai' => $tanggal_mulai,
+            'tanggal_selesai' => $tanggal_selesai,
+            'tempat' => $this->input->post('tempat'),
+            'batas_pendaftaran' => $this->input->post('batas_pendaftaran'),
+            'status' => $this->input->post('status'),
+            'link_pendaftaran' => $this->input->post('link_pendaftaran')
+        ];
     }
 
     // --- 3. CREATE (TAMBAH DATA) ---
@@ -110,16 +280,12 @@ class Admin extends CI_Controller
             }
         }
 
-        $data = [
-            'judul' => $this->input->post('judul'),
-            'slug' => url_title($this->input->post('judul'), 'dash', TRUE),
-            'tanggal_pelaksanaan' => $this->input->post('tanggal_pelaksanaan'),
-            'tempat' => $this->input->post('tempat'),
-            'batas_pendaftaran' => $this->input->post('batas_pendaftaran'),
-            'status' => $this->input->post('status'),
-            'link_pendaftaran' => $this->input->post('link_pendaftaran'),
-            'poster' => $poster_name
-        ];
+        $data = $this->_collect_event_payload();
+        if (!$this->_has_valid_date_range($data['tanggal_mulai'], $data['tanggal_selesai'])) {
+            $this->session->set_flashdata('error', 'Tanggal selesai tidak boleh lebih awal dari tanggal mulai!');
+            redirect('admin/tambah');
+        }
+        $data['poster'] = $poster_name;
 
         $this->db->insert('events', $data);
         $this->session->set_flashdata('success', 'Event berhasil ditambahkan!');
@@ -132,6 +298,11 @@ class Admin extends CI_Controller
         $this->_check_login();
         $data['event'] = $this->db->get_where('events', ['id' => $id])->row_array();
         if (!$data['event']) show_404();
+
+        $data['event']['tanggal_mulai_input'] = $this->_normalize_date_for_input($data['event']['tanggal_mulai']);
+        $data['event']['tanggal_selesai_input'] = $this->_normalize_date_for_input($data['event']['tanggal_selesai']);
+        $data['event']['batas_pendaftaran_input'] = $this->_normalize_date_for_input($data['event']['batas_pendaftaran']);
+
         $this->load->view('admin/event_form', $data);
     }
 
@@ -140,15 +311,11 @@ class Admin extends CI_Controller
         $this->_check_login();
         $old_event = $this->db->get_where('events', ['id' => $id])->row_array();
 
-        $data = [
-            'judul' => $this->input->post('judul'),
-            'slug' => url_title($this->input->post('judul'), 'dash', TRUE),
-            'tanggal_pelaksanaan' => $this->input->post('tanggal_pelaksanaan'),
-            'tempat' => $this->input->post('tempat'),
-            'batas_pendaftaran' => $this->input->post('batas_pendaftaran'),
-            'status' => $this->input->post('status'),
-            'link_pendaftaran' => $this->input->post('link_pendaftaran'),
-        ];
+        $data = $this->_collect_event_payload();
+        if (!$this->_has_valid_date_range($data['tanggal_mulai'], $data['tanggal_selesai'])) {
+            $this->session->set_flashdata('error', 'Tanggal selesai tidak boleh lebih awal dari tanggal mulai!');
+            redirect('admin/edit/' . $id);
+        }
 
         // Cek jika ada upload gambar baru
         if (!empty($_FILES['poster']['name'])) {

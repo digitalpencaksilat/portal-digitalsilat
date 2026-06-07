@@ -62,18 +62,26 @@
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Tanggal Pelaksanaan <span class="text-danger">*</span></label>
+                                <label class="form-label">Tanggal Mulai <span class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <span class="input-group-text bg-white"><i class="far fa-calendar-alt text-muted"></i></span>
-                                    <input type="text" name="tanggal_pelaksanaan" class="form-control" placeholder="Contoh: 20 - 22 Oktober 2024" value="<?= isset($event) ? $event['tanggal_pelaksanaan'] : ''; ?>" required>
+                                    <input type="date" name="tanggal_mulai" class="form-control" value="<?= isset($event) ? $event['tanggal_mulai_input'] : ''; ?>" required>
                                 </div>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Batas Pendaftaran <span class="text-danger">*</span></label>
+                                <label class="form-label">Tanggal Selesai <span class="text-danger">*</span></label>
                                 <div class="input-group">
-                                    <span class="input-group-text bg-white"><i class="far fa-clock text-muted"></i></span>
-                                    <input type="text" name="batas_pendaftaran" class="form-control" placeholder="Contoh: 10 Oktober 2024" value="<?= isset($event) ? $event['batas_pendaftaran'] : ''; ?>" required>
+                                    <span class="input-group-text bg-white"><i class="far fa-calendar-check text-muted"></i></span>
+                                    <input type="date" name="tanggal_selesai" class="form-control" value="<?= isset($event) ? $event['tanggal_selesai_input'] : ''; ?>" required>
                                 </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Batas Pendaftaran <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-white"><i class="far fa-clock text-muted"></i></span>
+                                <input type="date" name="batas_pendaftaran" class="form-control" value="<?= isset($event) ? $event['batas_pendaftaran_input'] : ''; ?>" required>
                             </div>
                         </div>
 

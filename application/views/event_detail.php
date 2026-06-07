@@ -79,7 +79,7 @@
                         </div>
                         <div class="d-flex align-items-center">
                             <i class="far fa-calendar-alt text-danger me-2 fa-lg"></i>
-                            <span><?= $event['tanggal_pelaksanaan'] ?></span>
+                            <span><?= $event['tanggal_pelaksanaan_display'] ?></span>
                         </div>
                     </div>
                 </div>
