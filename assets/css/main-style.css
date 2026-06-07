@@ -541,3 +541,122 @@ footer {
     .carousel-caption .lead { font-size: 0.9rem; margin-bottom: 15px; }
     .btn-brand { padding: 8px 25px; font-size: 0.9rem; }
 }
+
+/* ============================================================
+   PERINGKAT ATLET (Leaderboard Section)
+   ============================================================ */
+.peringkat-section {
+    background-color: #fff;
+    padding: 100px 0;
+    position: relative;
+    overflow: hidden;
+}
+/* Aksen lingkaran samar di latar, senada gaya about-section */
+.peringkat-section::before {
+    content: '';
+    position: absolute;
+    top: -80px;
+    right: -80px;
+    width: 320px;
+    height: 320px;
+    background: rgba(198, 0, 0, 0.04);
+    border-radius: 50%;
+    z-index: 0;
+}
+.peringkat-section::after {
+    content: '';
+    position: absolute;
+    bottom: -100px;
+    left: -100px;
+    width: 360px;
+    height: 360px;
+    background: rgba(255, 215, 0, 0.06);
+    border-radius: 50%;
+    z-index: 0;
+}
+.peringkat-section .container { z-index: 1; }
+
+/* Filter pill buttons */
+.lb-filter .btn {
+    border-radius: 50px;
+    padding: 6px 22px;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    border: 2px solid var(--brand-primary);
+}
+.lb-filter .btn.active {
+    background-color: var(--brand-primary);
+    color: #fff;
+}
+
+/* Podium top 3 */
+.lb-podium { align-items: flex-end; }
+.podium-card {
+    background: #fff;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--box-shadow);
+    padding: 28px 18px 22px;
+    text-align: center;
+    position: relative;
+    border-top: 5px solid #ddd;
+    transition: transform 0.3s, box-shadow 0.3s;
+    margin-top: 28px;
+}
+.podium-card:hover { transform: translateY(-6px); box-shadow: var(--box-shadow-hover); }
+.podium-1 { border-top-color: var(--brand-secondary); margin-top: 0; }
+.podium-2 { border-top-color: #C0C0C0; }
+.podium-3 { border-top-color: #cd7f32; }
+.podium-rank {
+    position: absolute; top: -22px; left: 50%; transform: translateX(-50%);
+    width: 44px; height: 44px; line-height: 44px; border-radius: 50%;
+    font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 1.2rem;
+    color: #fff; background: #aaa; box-shadow: 0 3px 8px rgba(0,0,0,.2);
+}
+.podium-1 .podium-rank { background: var(--brand-secondary); color: #5b4a00; }
+.podium-2 .podium-rank { background: #C0C0C0; color: #3a3a3a; }
+.podium-3 .podium-rank { background: #cd7f32; }
+.podium-medal { font-size: 2rem; margin-bottom: 6px; }
+.podium-1 .podium-medal { color: var(--brand-secondary); }
+.podium-2 .podium-medal { color: #C0C0C0; }
+.podium-3 .podium-medal { color: #cd7f32; }
+.podium-name {
+    font-family: 'Oswald', sans-serif; text-transform: uppercase;
+    color: var(--brand-dark); margin-bottom: 2px; font-size: 1.05rem; min-height: 2.4em;
+    display: flex; align-items: center; justify-content: center;
+}
+.podium-contingent { color: #888; font-size: 0.8rem; margin-bottom: 12px; min-height: 2.2em; }
+.podium-medals { display: flex; justify-content: center; gap: 14px; font-weight: 600; margin-bottom: 12px; }
+.podium-poin {
+    background: var(--brand-primary); color: #fff;
+    font-family: 'Oswald', sans-serif; font-weight: 700;
+    border-radius: 50px; padding: 5px 0; font-size: 1rem;
+}
+
+/* Medal colors */
+.medal-emas { color: #d4a000; }
+.medal-perak { color: #9a9a9a; }
+.medal-perunggu { color: #a06a30; }
+
+/* Leaderboard table */
+.lb-card {
+    background: #fff; border-radius: var(--border-radius-md);
+    box-shadow: var(--box-shadow); overflow: hidden;
+}
+.lb-table thead th {
+    font-family: 'Oswald', sans-serif; text-transform: uppercase;
+    font-size: 0.8rem; letter-spacing: 0.5px;
+    background: var(--brand-dark); color: #fff; vertical-align: middle; border: none;
+}
+.lb-table tbody td { vertical-align: middle; }
+.atlet-link { color: var(--brand-dark); text-decoration: none; font-weight: 600; }
+.atlet-link:hover { color: var(--brand-primary); }
+.poin-pill {
+    background: var(--brand-primary); color: #fff; font-weight: 700;
+    padding: 3px 14px; border-radius: 50px; font-family: 'Oswald', sans-serif;
+}
+
+@media (max-width: 576px) {
+    .podium-name { font-size: 0.95rem; }
+    .lb-filter .btn { padding: 5px 14px; font-size: 0.78rem; }
+}

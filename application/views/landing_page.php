@@ -34,6 +34,7 @@
                     <li class="nav-item"><a class="nav-link active" href="#heroCarousel">Beranda</a></li>
                     <li class="nav-item"><a class="nav-link" href="#about">Tentang Kami</a></li>
                     <li class="nav-item"><a class="nav-link" href="#events">Jadwal Event</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#peringkat">Peringkat</a></li>
                     <li class="nav-item"><a class="nav-link" href="#contact">Kontak</a></li>
                 </ul>
             </div>
@@ -258,6 +259,40 @@
         </div>
     </section>
 
+    <!-- Peringkat Atlet Section -->
+    <section id="peringkat" class="peringkat-section">
+        <div class="container position-relative">
+            <div class="section-title">
+                <h2>PERINGKAT ATLET</h2>
+                <p>Akumulasi Prestasi Atlet dari seluruh event yang berkerjasama dengan Digital Pencak Silat</p>
+            </div>
+
+            <!-- Filter kategori + poin info -->
+            <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
+                <div class="btn-group lb-filter" role="group" aria-label="Filter kategori">
+                    <button type="button" class="btn btn-outline-danger active" data-kategori="">Semua</button>
+                    <button type="button" class="btn btn-outline-danger" data-kategori="tanding">Tanding</button>
+                    <button type="button" class="btn btn-outline-danger" data-kategori="seni">Seni</button>
+                </div>
+                <span class="text-muted small"><i class="fas fa-info-circle me-1"></i> Poin: Emas 5 &middot; Perak 3 &middot; Perunggu 1 &middot; Menampilkan Top 10</span>
+            </div>
+
+            <div id="lb-loader" class="text-center py-5 d-none">
+                <div class="spinner-border text-danger" role="status" style="width: 3rem; height: 3rem;"></div>
+            </div>
+
+            <div id="leaderboard-container">
+                <?php $list = $leaderboard; include(APPPATH . 'views/peringkat/_leaderboard_inner.php'); ?>
+            </div>
+
+            <div class="text-center mt-4">
+                <a href="<?= base_url('peringkat'); ?>" class="btn btn-brand px-4 py-2">
+                    <i class="fas fa-list-ol me-2"></i> Lihat Peringkat Lengkap (<?= number_format($leaderboard_total); ?> Atlet)
+                </a>
+            </div>
+        </div>
+    </section>
+
     <!-- Footer Dinamis -->
     <footer id="contact">
         <div class="container">
@@ -275,6 +310,7 @@
                         <li class="mb-2"><a href="#home" class="text-dark text-decoration-none hover-underline">Beranda</a></li>
                         <li class="mb-2"><a href="#about" class="text-dark text-decoration-none hover-underline">Tentang Kami</a></li>
                         <li class="mb-2"><a href="#events" class="text-dark text-decoration-none hover-underline">Jadwal Event</a></li>
+                        <li class="mb-2"><a href="#peringkat" class="text-dark text-decoration-none hover-underline">Peringkat Atlet</a></li>
                     </ul>
                 </div>
                 <div class="col-md-4 mb-4">
@@ -578,6 +614,42 @@
                 navbar.style.padding = '15px 0';
             }
         }
+
+        // --- 5. FILTER PERINGKAT ATLET (AJAX) ---
+        (function () {
+            const filterBtns = document.querySelectorAll('.lb-filter .btn');
+            const lbContainer = document.getElementById('leaderboard-container');
+            const lbLoader = document.getElementById('lb-loader');
+            if (!filterBtns.length || !lbContainer) return;
+
+            const baseUrl = '<?= base_url('peringkat/data'); ?>';
+
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', function () {
+                    if (this.classList.contains('active')) return;
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+
+                    const kategori = this.getAttribute('data-kategori') || '';
+                    lbLoader.classList.remove('d-none');
+                    lbContainer.style.opacity = '0.4';
+
+                    fetch(baseUrl + '?kategori=' + encodeURIComponent(kategori), {
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                    })
+                        .then(r => r.text())
+                        .then(html => {
+                            lbContainer.innerHTML = html;
+                            lbLoader.classList.add('d-none');
+                            lbContainer.style.opacity = '1';
+                        })
+                        .catch(() => {
+                            lbLoader.classList.add('d-none');
+                            lbContainer.style.opacity = '1';
+                        });
+                });
+            });
+        })();
     </script>
 </body>
 

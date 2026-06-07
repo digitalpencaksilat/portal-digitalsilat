@@ -10,6 +10,7 @@ class Event extends CI_Controller
         $this->load->database();
         $this->load->library('pagination');
         $this->load->helper('url');
+        $this->load->model('Peringkat_model', 'peringkat');
     }
 
     public function index()
@@ -85,6 +86,12 @@ class Event extends CI_Controller
             ]);
             exit;
         }
+
+        // --- 5. DATA PERINGKAT ATLET (untuk section leaderboard di landing) ---
+        // Tampilkan Top 10 atlet (semua kategori) sebagai default.
+        $full_leaderboard = $this->peringkat->build_leaderboard([]);
+        $data['leaderboard'] = array_slice($full_leaderboard, 0, 10);
+        $data['leaderboard_total'] = count($full_leaderboard);
 
         // Load view utama jika bukan request AJAX
         $this->load->view('landing_page', $data);
