@@ -35,6 +35,7 @@
                     <li class="nav-item"><a class="nav-link" href="#about">Tentang Kami</a></li>
                     <li class="nav-item"><a class="nav-link" href="#events">Jadwal Event</a></li>
                     <li class="nav-item"><a class="nav-link" href="#peringkat">Peringkat</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#news">News</a></li>
                     <li class="nav-item"><a class="nav-link" href="#contact">Kontak</a></li>
                 </ul>
             </div>
@@ -50,7 +51,7 @@
         </div>
         <div class="carousel-inner">
             <div class="carousel-item active">
-                <img src="<?= base_url('assets/carousel/carousel-1.jpg'); ?>" class="d-block w-100" alt="Silat 1">
+                <img src="<?= base_url('assets/carousel/carousel-1.webp'); ?>" class="d-block w-100" alt="Silat 1">
                 <div class="carousel-caption">
                     <h1 class="hero-title">BANGKITKAN JIWA <br><span class="text-highlight">PENDEKAR</span></h1>
                     <p class="lead">Platform informasi terpusat event Pencak Silat Indonesia dengan Digital Pencak Silat.</p>
@@ -58,7 +59,7 @@
                 </div>
             </div>
             <div class="carousel-item">
-                <img src="<?= base_url('assets/carousel/carousel-2.jpg'); ?>" class="d-block w-100" alt="Silat 2">
+                <img src="<?= base_url('assets/carousel/carousel-2.webp'); ?>" class="d-block w-100" alt="Silat 2">
                 <div class="carousel-caption">
                     <h1 class="hero-title">LESTARIKAN <br><span class="text-highlight">BUDAYA BANGSA</span></h1>
                     <p class="lead">Dari tradisi menuju prestasi dunia.</p>
@@ -66,7 +67,7 @@
                 </div>
             </div>
             <div class="carousel-item">
-                <img src="<?= base_url('assets/carousel/carousel-3.jpg'); ?>" class="d-block w-100" alt="Silat 3">
+                <img src="<?= base_url('assets/carousel/carousel-3.webp'); ?>" class="d-block w-100" alt="Silat 3">
                 <div class="carousel-caption">
                     <h1 class="hero-title">RAIH <br><span class="text-highlight">PRESTASI TERTINGGI</span></h1>
                     <p class="lead">Daftarkan perguruanmu di kejuaraan bergengsi.</p>
@@ -91,7 +92,7 @@
                 <div class="col-lg-6 order-lg-2">
                     <div class="about-image-stack">
                         <!-- Update Image to carousel-4.jpg -->
-                        <img src="<?= base_url('assets/carousel/carousel-4.jpg'); ?>" alt="Tentang Kami" class="about-img img-fluid" onerror="this.src='https://images.unsplash.com/photo-1599058945522-28d584b6f0ff?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'">
+                        <img src="<?= base_url('assets/carousel/carousel-4.webp'); ?>" alt="Tentang Kami" class="about-img img-fluid" onerror="this.src='https://images.unsplash.com/photo-1599058945522-28d584b6f0ff?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'">
                         <div class="stats-badge">
                             <div class="stats-number">100+</div>
                             <div class="stats-text"><span>Event<br>Terlaksana</span></div>
@@ -293,6 +294,38 @@
         </div>
     </section>
 
+    <!-- Digital Silat News -->
+    <?php if (!empty($latest_news)): ?>
+    <section id="news" class="py-5 bg-light">
+        <div class="container">
+            <div class="section-title">
+                <h2>DIGITAL SILAT NEWS</h2>
+                <p>Berita terbaru seputar kejuaraan dan kegiatan Digital Pencak Silat</p>
+            </div>
+            <div class="row g-4">
+                <?php $main_news = $featured_news ?: $latest_news[0]; ?>
+                <div class="col-lg-7">
+                    <a href="<?= base_url('news/detail/' . rawurlencode($main_news['slug'])); ?>" class="text-decoration-none text-dark">
+                        <article class="event-card h-100 overflow-hidden">
+                            <img src="<?= base_url('assets/uploads/news/covers/' . rawurlencode($main_news['cover_image'] ?: $main_news['cover_image_fallback'])); ?>" alt="<?= html_escape($main_news['image_alt']); ?>" class="w-100" style="height: 330px; object-fit: cover;">
+                            <div class="card-body"><small class="text-danger fw-bold text-uppercase">Berita Utama</small><h3 class="event-title mt-2"><?= html_escape($main_news['title']); ?></h3><p class="text-muted mb-0"><?= html_escape(character_limiter($main_news['excerpt'], 160, '…')); ?></p></div>
+                        </article>
+                    </a>
+                </div>
+                <div class="col-lg-5">
+                    <?php foreach ($latest_news as $article): if ($article['id'] == $main_news['id']) continue; ?>
+                    <a href="<?= base_url('news/detail/' . rawurlencode($article['slug'])); ?>" class="text-decoration-none text-dark d-flex gap-3 bg-white rounded-3 p-2 mb-3 shadow-sm">
+                        <img src="<?= base_url('assets/uploads/news/covers/' . rawurlencode($article['thumbnail_image'] ?: $article['thumbnail_image_fallback'] ?: $article['cover_image'])); ?>" alt="<?= html_escape($article['image_alt']); ?>" width="130" height="100" class="rounded object-fit-cover">
+                        <div><h5 class="mb-1"><?= html_escape($article['title']); ?></h5><small class="text-muted"><?= date('d M Y', strtotime($article['published_at'])); ?></small></div>
+                    </a>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+            <div class="text-center mt-4"><a href="<?= base_url('news'); ?>" class="btn btn-brand">Lihat Semua Berita</a></div>
+        </div>
+    </section>
+    <?php endif; ?>
+
     <!-- Footer Dinamis -->
     <footer id="contact">
         <div class="container">
@@ -311,6 +344,7 @@
                         <li class="mb-2"><a href="#about" class="text-dark text-decoration-none hover-underline">Tentang Kami</a></li>
                         <li class="mb-2"><a href="#events" class="text-dark text-decoration-none hover-underline">Jadwal Event</a></li>
                         <li class="mb-2"><a href="#peringkat" class="text-dark text-decoration-none hover-underline">Peringkat Atlet</a></li>
+                        <li class="mb-2"><a href="#news" class="text-dark text-decoration-none hover-underline">Digital Silat News</a></li>
                     </ul>
                 </div>
                 <div class="col-md-4 mb-4">

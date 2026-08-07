@@ -54,6 +54,7 @@
                     <li class="nav-item"><a class="nav-link" href="<?= base_url(); ?>#about">Tentang Kami</a></li>
                     <li class="nav-item"><a class="nav-link active" href="<?= base_url(); ?>#events">Jadwal Event</a></li>
                     <li class="nav-item"><a class="nav-link" href="<?= base_url(); ?>#peringkat">Peringkat</a></li>
+                    <li class="nav-item"><a class="nav-link" href="<?= base_url('news'); ?>">News</a></li>
                     <li class="nav-item"><a class="nav-link" href="<?= base_url(); ?>#contact">Kontak</a></li>
                 </ul>
             </div>
@@ -61,7 +62,7 @@
     </nav>
 
     <!-- Header Section -->
-    <div class="event-header" style="background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('<?= base_url('assets/carousel/carousel-1.jpg') ?>');">
+    <div class="event-header" style="background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('<?= base_url('assets/carousel/carousel-1.webp') ?>');">
         <div class="container">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">

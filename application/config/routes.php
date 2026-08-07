@@ -50,5 +50,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
 |		my-controller/my-method	-> my_controller/my_method
 */
 $route['default_controller'] = 'event';
+$route['news'] = 'news/index';
+$route['news/detail/(:any)'] = 'news/detail/$1';
+$route['admin/news'] = 'admin/news';
+$route['admin/news/create'] = 'admin/news_create';
+$route['admin/news/edit/(:num)'] = 'admin/news_edit/$1';
+$route['admin/news/save'] = 'admin/news_save';
+$route['admin/news/delete/(:num)'] = 'admin/news_delete/$1';
+$route['admin/news/preview/(:num)'] = 'admin/news_preview/$1';
+$route['admin/events'] = 'admin/dashboard';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;

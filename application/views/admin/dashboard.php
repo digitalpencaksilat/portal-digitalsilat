@@ -27,23 +27,7 @@
 
 <body class="admin-body">
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light sticky-top">
-        <div class="container">
-            <a class="navbar-brand" href="#">
-                <img src="<?= base_url('assets/logo/logo.png'); ?>" alt="Logo">
-                ADMIN PANEL
-            </a>
-            <div class="d-flex align-items-center">
-                <a href="<?= base_url('admin/api_management'); ?>" class="btn btn-outline-danger btn-sm me-2"><i class="fas fa-key me-1"></i> Manajemen API</a>
-                <a href="<?= base_url('admin/pengaturan'); ?>" class="btn btn-outline-dark btn-sm me-2"><i class="fas fa-cog me-1"></i> Pengaturan Kontak</a>
-                <span class="d-none d-md-block me-3 text-muted">Hai, <strong><?= $this->session->userdata('nama'); ?></strong></span>
-                <a href="<?= base_url('admin/logout'); ?>" class="btn btn-outline-danger btn-sm" id="btn-logout">
-                    <i class="fas fa-sign-out-alt me-1"></i> Logout
-                </a>
-            </div>
-        </div>
-    </nav>
+    <?php $admin_active_menu = $this->uri->segment(2) === 'events' ? 'event' : 'dashboard'; include(APPPATH . 'views/admin/_navbar.php'); ?>
 
     <div class="container py-5">
 
@@ -139,7 +123,7 @@
             </div>
         </div>
 
-        <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-4" id="event-management">
             <div>
                 <h3 class="fw-bold text-dark mb-0">Manajemen Event</h3>
                 <p class="text-muted small">Kelola data kejuaraan dan jadwal.</p>

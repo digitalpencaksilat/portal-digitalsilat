@@ -23,24 +23,7 @@
 
 <body class="admin-body">
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light sticky-top">
-        <div class="container">
-            <a class="navbar-brand" href="<?= base_url('admin/dashboard'); ?>">
-                <img src="<?= base_url('assets/logo/logo.png'); ?>" alt="Logo">
-                ADMIN PANEL
-            </a>
-            <div class="d-flex align-items-center">
-                <a href="<?= base_url('admin/dashboard'); ?>" class="btn btn-outline-dark btn-sm me-2">
-                    <i class="fas fa-arrow-left me-1"></i> Kembali ke Dashboard
-                </a>
-                <span class="d-none d-md-block me-3 text-muted">Hai, <strong><?= $this->session->userdata('nama'); ?></strong></span>
-                <a href="<?= base_url('admin/logout'); ?>" class="btn btn-outline-danger btn-sm" id="btn-logout">
-                    <i class="fas fa-sign-out-alt me-1"></i> Logout
-                </a>
-            </div>
-        </div>
-    </nav>
+    <?php $admin_active_menu = 'settings'; include(APPPATH . 'views/admin/_navbar.php'); ?>
 
     <div class="container py-5">
         <div class="row justify-content-center">

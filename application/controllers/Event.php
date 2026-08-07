@@ -9,7 +9,7 @@ class Event extends CI_Controller
         parent::__construct();
         $this->load->database();
         $this->load->library('pagination');
-        $this->load->helper('url');
+        $this->load->helper(['url', 'text']);
         $this->load->model('Peringkat_model', 'peringkat');
     }
 
@@ -92,6 +92,11 @@ class Event extends CI_Controller
         $full_leaderboard = $this->peringkat->build_leaderboard([]);
         $data['leaderboard'] = array_slice($full_leaderboard, 0, 10);
         $data['leaderboard_total'] = count($full_leaderboard);
+
+        // Berita terbaru ditampilkan setelah kalender event di landing page.
+        $this->load->model('News_model', 'news');
+        $data['featured_news'] = $this->news->featured();
+        $data['latest_news'] = $this->news->all('published', '', 3, 0);
 
         // Load view utama jika bukan request AJAX
         $this->load->view('landing_page', $data);

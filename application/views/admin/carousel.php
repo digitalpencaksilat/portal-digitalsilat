@@ -13,25 +13,11 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="<?= base_url('assets/css/variables.css'); ?>">
     <link rel="stylesheet" href="<?= base_url('assets/css/admin-style.css'); ?>">
-    <style>
-        .nav-admin-link { color: #555; text-decoration: none; font-weight: 600; margin-right: 20px; transition: 0.3s; }
-        .nav-admin-link:hover, .nav-admin-link.active { color: var(--brand-primary); }
-    </style>
 </head>
 
 <body class="admin-body">
 
-    <nav class="navbar navbar-expand-lg navbar-light sticky-top">
-        <div class="container">
-            <a class="navbar-brand fw-bold text-danger" href="#">ADMIN PANEL</a>
-            <div class="ms-auto d-flex align-items-center">
-                <a href="<?= base_url('admin/dashboard'); ?>" class="nav-admin-link">Event</a>
-                <a href="<?= base_url('admin/carousel'); ?>" class="nav-admin-link active">Carousel</a>
-                <a href="<?= base_url('admin/pengaturan'); ?>" class="nav-admin-link">Pengaturan</a>
-                <a href="<?= base_url('admin/logout'); ?>" class="btn btn-outline-danger btn-sm">Logout</a>
-            </div>
-        </div>
-    </nav>
+    <?php $admin_active_menu = 'event'; include(APPPATH . 'views/admin/_navbar.php'); ?>
 
     <div class="container py-5">
         <div class="row">
@@ -99,6 +85,7 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         <?php if ($this->session->flashdata('success')): ?>

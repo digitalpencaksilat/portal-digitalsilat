@@ -6,6 +6,7 @@
 
 ### Public Portal
 - **Dynamic Landing Page**: Features a responsive carousel and event highlights.
+- **Digital Silat News**: Global news listing, SEO-friendly article detail pages, search, featured news, and optional event links.
 - **Event Listing**: Paginated view of all Pencak Silat events with AJAX-powered navigation for smooth transitions.
 - **Event Status**: Clear indicators for event statuses such as *Open Registration*, *Coming Soon*, and *Finished*.
 - **Visitor Tracking**: Built-in system to track unique daily visitors via IP addresses.
@@ -15,6 +16,7 @@
 - **Event Management (CRUD)**: Easily add, update, and delete events, including poster uploads.
 - **Site Settings**: Manage contact information (WhatsApp, Email, Social Media) dynamically from the dashboard.
 - **Secure Authentication**: Protected admin area with login/logout functionality.
+- **News Management**: Create drafts, publish/archive articles, upload optimized covers, preview content, and link articles to events.
 
 ## 🛠 Tech Stack
 
@@ -22,6 +24,7 @@
 - **Frontend**: HTML5, CSS3, JavaScript (AJAX), [Bootstrap 5](https://getbootstrap.com/)
 - **Database**: MySQL / MariaDB
 - **Asset Management**: Custom posters and carousel images.
+- **Image Optimization**: New uploads are resized and converted to WebP with JPEG fallback; existing carousel and event posters have been migrated to WebP.
 
 ## 📦 Installation
 
@@ -54,6 +57,18 @@ To run this project locally, follow these steps:
    - Place the project in your web server root (e.g., `htdocs` for XAMPP).
    - Access the portal via `http://localhost/portal-digitalsilat/`.
    - Access the admin dashboard via `http://localhost/portal-digitalsilat/index.php/admin`.
+   - Manage news via `http://localhost/portal-digitalsilat/index.php/admin/news`.
+
+## Digital Silat News
+
+The news module intentionally has no categories. Articles can cover upcoming competitions, completed competitions, or Digital Pencak Silat activities. An article may optionally reference an event through `related_event_id`.
+
+Public URLs:
+
+- `http://localhost/portal-digitalsilat/index.php/news`
+- `http://localhost/portal-digitalsilat/index.php/news/detail/{slug}`
+
+See [docs/NEWS_IMPLEMENTATION.md](docs/NEWS_IMPLEMENTATION.md) for the database fields, image pipeline, and deployment notes.
 
 ## 📷 Screenshots
 

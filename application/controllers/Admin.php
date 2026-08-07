@@ -9,8 +9,9 @@ class Admin extends CI_Controller
         parent::__construct();
         // Load library dan helper yang dibutuhkan
         $this->load->database();
-        $this->load->library(['session', 'form_validation', 'upload']);
-        $this->load->helper(['url', 'form', 'file']);
+        $this->load->library(['session', 'form_validation', 'upload', 'image_optimizer']);
+        $this->load->helper(['url', 'form', 'file', 'text']);
+        $this->load->model('News_model', 'news');
     }
 
     // --- 1. HALAMAN LOGIN & AUTH ---
@@ -366,17 +367,32 @@ class Admin extends CI_Controller
 
     private function _do_upload()
     {
-        $config['upload_path'] = './assets/uploads/posters/';
-        $config['allowed_types'] = 'gif|jpg|png|jpeg';
-        $config['max_size'] = 2048; // 2MB
+        $config['upload_path'] = './assets/uploads/posters/tmp/';
+        $config['allowed_types'] = 'gif|jpg|png|jpeg|webp';
+        $config['max_size'] = 5120; // 5MB before optimization
         $config['encrypt_name'] = TRUE;
 
+        if (!is_dir($config['upload_path'])) @mkdir($config['upload_path'], 0755, TRUE);
         $this->upload->initialize($config);
 
         if (!$this->upload->do_upload('poster')) {
             return ['status' => false, 'error' => $this->upload->display_errors()];
         } else {
-            return ['status' => true, 'file_name' => $this->upload->data('file_name')];
+            $temporary = $this->upload->data('full_path');
+            $optimized = $this->image_optimizer->process($temporary, './assets/uploads/posters/', [
+                'max_dimension' => 1400,
+                'quality' => 84,
+                'thumbnail' => false,
+                'crop' => false,
+            ]);
+            @unlink($temporary);
+            if (!$optimized['status']) return $optimized;
+
+            // The events schema has one poster column, so keep one optimized asset.
+            if (!empty($optimized['jpeg']) && !empty($optimized['webp'])) {
+                @unlink('./assets/uploads/posters/' . $optimized['jpeg']);
+            }
+            return ['status' => true, 'file_name' => $optimized['webp'] ?: $optimized['jpeg']];
         }
     }
 
@@ -427,5 +443,159 @@ class Admin extends CI_Controller
         
         $this->session->set_flashdata('success', 'API Key berhasil diperbarui!');
         redirect('admin/api_management');
+    }
+
+    // --- 8. MANAJEMEN NEWS ---
+    public function news()
+    {
+        $this->_check_login();
+        $keyword = trim((string) $this->input->get('keyword'));
+        $status = trim((string) $this->input->get('status'));
+        $per_page = 10;
+        $page = max(1, (int) $this->input->get('page'));
+        $total = $this->news->count($status, $keyword);
+
+        $data['articles'] = $this->news->all($status, $keyword, $per_page, ($page - 1) * $per_page);
+        $data['keyword'] = $keyword;
+        $data['status_filter'] = $status;
+        $data['page'] = $page;
+        $data['last_page'] = max(1, (int) ceil($total / $per_page));
+        $data['news_counts'] = [
+            'all' => $this->news->count(),
+            'published' => $this->news->count('published'),
+            'draft' => $this->news->count('draft'),
+            'archived' => $this->news->count('archived'),
+        ];
+        $this->load->view('admin/news/index', $data);
+    }
+
+    public function news_create()
+    {
+        $this->_check_login();
+        $data['events'] = $this->_news_events();
+        $this->load->view('admin/news/form', $data);
+    }
+
+    public function news_edit($id)
+    {
+        $this->_check_login();
+        $data['article'] = $this->news->find($id);
+        if (!$data['article']) show_404();
+        $data['events'] = $this->_news_events();
+        $this->load->view('admin/news/form', $data);
+    }
+
+    public function news_save()
+    {
+        $this->_check_login();
+        $id = (int) $this->input->post('id');
+        $existing = $id ? $this->news->find($id) : NULL;
+        if ($id && !$existing) show_404();
+
+        $title = trim((string) $this->input->post('title'));
+        $content = trim((string) $this->input->post('content'));
+        $status = $this->input->post('status') === 'published' ? 'published' : ($this->input->post('status') === 'archived' ? 'archived' : 'draft');
+        if ($title === '' || ($status === 'published' && $content === '')) {
+            $this->session->set_flashdata('error', 'Judul wajib diisi dan berita published harus memiliki isi.');
+            redirect($id ? 'admin/news/edit/' . $id : 'admin/news/create');
+        }
+
+        $data = [
+            'title' => $title,
+            'slug' => $this->news->unique_slug($title, $id ?: NULL),
+            'excerpt' => trim((string) $this->input->post('excerpt')),
+            'content' => $this->_sanitize_article($content),
+            'image_alt' => trim((string) $this->input->post('image_alt')) ?: $title,
+            'author_name' => trim((string) $this->input->post('author_name')) ?: 'Digital Pencak Silat',
+            'status' => $status,
+            'is_featured' => $this->input->post('is_featured') ? 1 : 0,
+            'related_event_id' => $this->input->post('related_event_id') ? (int) $this->input->post('related_event_id') : NULL,
+            'published_at' => $status === 'published' ? ($this->input->post('published_at') ?: date('Y-m-d H:i:s')) : NULL,
+        ];
+
+        if (!empty($_FILES['cover']['name'])) {
+            $upload = $this->_optimize_news_image();
+            if (!$upload['status']) {
+                $this->session->set_flashdata('error', $upload['error']);
+                redirect($id ? 'admin/news/edit/' . $id : 'admin/news/create');
+            }
+            $data['cover_image'] = $upload['webp'];
+            $data['cover_image_fallback'] = $upload['jpeg'];
+            $data['thumbnail_image'] = $upload['thumbnail_webp'];
+            $data['thumbnail_image_fallback'] = $upload['thumbnail_jpeg'];
+            if ($existing) $this->_delete_news_images($existing);
+        } elseif (!$existing && $status === 'published') {
+            $this->session->set_flashdata('error', 'Cover berita wajib diunggah sebelum publikasi.');
+            redirect('admin/news/create');
+        }
+
+        if ($data['is_featured']) {
+            $this->db->set('is_featured', 0)->where('id !=', $id ?: 0)->update('news_articles');
+        }
+
+        if ($id) {
+            $this->db->where('id', $id)->update('news_articles', $data);
+        } else {
+            $this->db->insert('news_articles', $data);
+            $id = $this->db->insert_id();
+        }
+        $this->session->set_flashdata('success', 'Berita berhasil disimpan.');
+        redirect('admin/news/edit/' . $id);
+    }
+
+    public function news_delete($id)
+    {
+        $this->_check_login();
+        $article = $this->news->find($id);
+        if ($article) {
+            $this->_delete_news_images($article);
+            $this->db->delete('news_articles', ['id' => $id]);
+            $this->session->set_flashdata('success', 'Berita berhasil dihapus.');
+        }
+        redirect('admin/news');
+    }
+
+    public function news_preview($id)
+    {
+        $this->_check_login();
+        $article = $this->news->find($id);
+        if (!$article) show_404();
+        $data['article'] = $article;
+        $data['related'] = $this->news->related($article);
+        $data['s'] = array_column($this->db->get('site_settings')->result_array(), 'nilai', 'parameter');
+        $this->load->view('news/detail', $data);
+    }
+
+    private function _news_events()
+    {
+        return $this->db->select('id, judul, tanggal_pelaksanaan, tempat')->order_by('created_at', 'DESC')->get('events')->result_array();
+    }
+
+    private function _optimize_news_image()
+    {
+        $tmp = $_FILES['cover']['tmp_name'];
+        $directory = './assets/uploads/news/covers/';
+        return $this->image_optimizer->process($tmp, $directory, [
+            'max_dimension' => 1600,
+            'quality' => 84,
+            'thumbnail' => TRUE,
+            'thumbnail_dimension' => 480,
+            'crop' => FALSE,
+        ]);
+    }
+
+    private function _delete_news_images($article)
+    {
+        $names = ['cover_image', 'cover_image_fallback', 'thumbnail_image', 'thumbnail_image_fallback'];
+        foreach ($names as $name) {
+            if (!empty($article[$name])) @unlink('./assets/uploads/news/covers/' . basename($article[$name]));
+        }
+    }
+
+    private function _sanitize_article($content)
+    {
+        $allowed = '<p><br><strong><b><em><i><u><h2><h3><ul><ol><li><blockquote><a>';
+        $content = strip_tags($content, $allowed);
+        return preg_replace('/\s(on\w+|style)\s*=\s*("[^"]*"|\'[^\']*\'|[^\s>]+)/i', '', $content);
     }
 }
