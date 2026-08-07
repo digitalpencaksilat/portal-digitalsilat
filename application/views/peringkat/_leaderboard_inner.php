@@ -16,7 +16,7 @@ $medal_colors = ['rank-1', 'rank-2', 'rank-3'];
     <div class="row g-3 justify-content-center mb-4 lb-podium">
         <?php foreach ($podium as $i => $a): ?>
             <div class="col-md-4 col-sm-6">
-                <a href="<?= base_url('peringkat/atlet?key=' . urlencode($a['name_key'])); ?>" class="text-decoration-none">
+                <a href="<?= base_url('peringkat/atlet/' . ($a['row_id'] ?? urlencode($a['name_key']))); ?>" class="text-decoration-none">
                     <div class="podium-card podium-<?= $i + 1; ?>">
                         <div class="podium-rank"><?= $i + 1; ?></div>
                         <div class="podium-medal">
@@ -58,7 +58,7 @@ $medal_colors = ['rank-1', 'rank-2', 'rank-3'];
                             <tr>
                                 <td class="text-center fw-bold text-muted"><?= $i + 4; ?></td>
                                 <td>
-                                    <a class="atlet-link" href="<?= base_url('peringkat/atlet?key=' . urlencode($a['name_key'])); ?>">
+                                    <a class="atlet-link" href="<?= base_url('peringkat/atlet/' . ($a['row_id'] ?? urlencode($a['name_key']))); ?>">
                                         <?= htmlspecialchars($a['display_name']); ?>
                                     </a>
                                     <div class="d-md-none text-muted small"><?= htmlspecialchars($a['last_contingent']); ?></div>

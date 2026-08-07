@@ -274,7 +274,7 @@
                     <button type="button" class="btn btn-outline-danger" data-kategori="tanding">Tanding</button>
                     <button type="button" class="btn btn-outline-danger" data-kategori="seni">Seni</button>
                 </div>
-                <span class="text-muted small"><i class="fas fa-info-circle me-1"></i> Poin: Emas 5 &middot; Perak 3 &middot; Perunggu 1 &middot; Menampilkan Top 10</span>
+                <span class="text-muted small"><i class="fas fa-info-circle me-1"></i> Poin: Emas 3 &middot; Perak 2 &middot; Perunggu 1 &middot; Menampilkan Top 10</span>
             </div>
 
             <div id="lb-loader" class="text-center py-5 d-none">

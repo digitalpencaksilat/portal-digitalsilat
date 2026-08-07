@@ -17,8 +17,8 @@ class Peringkat_model extends CI_Model
 {
     // Bobot poin (Emas/Perak/Perunggu)
     private $poin = [
-        'emas'     => 5,
-        'perak'    => 3,
+        'emas'     => 3,
+        'perak'    => 2,
         'perunggu' => 1,
     ];
 
@@ -75,7 +75,10 @@ class Peringkat_model extends CI_Model
      */
     public function build_leaderboard($filter = [])
     {
-        $this->db->select('id, event_id, winner_name, contingent, school, rank_label, category_main, gender, age_category');
+        // Include new identifier columns for future enhancement
+        $this->db->select('id, event_id, winner_name, contingent, school, rank_label, 
+                          category_main, gender, age_category, 
+                          athlete_nik, athlete_birthdate');
         $this->db->from('event_results');
 
         if (!empty($filter['category_main'])) {
@@ -107,6 +110,7 @@ class Peringkat_model extends CI_Model
                         'name_key'        => $key,
                         'display_name'    => $raw_name,
                         'last_contingent' => trim($r['contingent']),
+                        '_first_id'       => $r['id'], // Store for clean URL
                         'emas'            => 0,
                         'perak'           => 0,
                         'perunggu'        => 0,
@@ -141,9 +145,16 @@ class Peringkat_model extends CI_Model
 
         // finalisasi: event_count + urutkan
         $list = [];
-        foreach ($athletes as $a) {
+        foreach ($athletes as $key => $a) {
             $a['event_count'] = count($a['events']);
             unset($a['events']);
+            
+            // Get first athlete id for clean URL (use name_key as temporary row_id)
+            $first_row_id = isset($a['_first_id']) ? $a['_first_id'] : null;
+            unset($a['_first_id']);
+            
+            $a['row_id'] = $first_row_id ?? 0; // Default to 0 if no ID found
+            
             $list[] = $a;
         }
 
@@ -213,5 +224,30 @@ class Peringkat_model extends CI_Model
         $summary['kontingen'] = array_keys($summary['kontingen']);
 
         return ['summary' => $summary, 'history' => $history];
+    }
+
+    /**
+     * Get athlete by row_id (clean URL support)
+     * Uses event_results.id as unique identifier
+     */
+    public function get_by_row_id($id)
+    {
+        $this->db->select('winner_name');
+        $this->db->from('event_results er');
+        $this->db->where('er.id', (int)$id);
+
+        $row = $this->db->get()->row_array();
+        if (!$row) {
+            return null;
+        }
+
+        // The row ID identifies one result; the profile must still show the
+        // athlete's history across all events.
+        $names = $this->split_names($row['winner_name']);
+        if (empty($names)) {
+            return null;
+        }
+
+        return $this->athlete_history($this->normalize_name($names[0]));
     }
 }

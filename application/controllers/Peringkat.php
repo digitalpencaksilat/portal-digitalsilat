@@ -82,16 +82,39 @@ class Peringkat extends CI_Controller
     }
 
     /**
-     * Detail atlet: /peringkat/atlet?key=NAMA_TERNORMALISASI
+     * Detail atlet: /peringkat/atlet?key=NAMA_TERNORMALISASI (Legacy support)
+     * AND /peringkat/atlet/{row_id} (Clean ID support)
      */
-    public function atlet()
+    public function atlet($identifier = null)
     {
-        $name_key = $this->input->get('key');
-        if (empty($name_key)) {
+        // If no identifier provided, redirect to main leaderboard
+        if ($identifier === null) {
             redirect('peringkat');
         }
 
+        // Try clean numeric ID first
+        if (ctype_digit($identifier)) {
+            $athlete_data = $this->peringkat->get_by_row_id((int)$identifier);
+            
+            if (!$athlete_data) {
+                show_404();
+            }
+            
+            $data['summary'] = $athlete_data['summary'];
+            $data['history'] = $athlete_data['history'];
+            $data['clean_id'] = (int)$identifier; // For template use
+            
+            $settings_raw = $this->db->get('site_settings')->result_array();
+            $data['s'] = array_column($settings_raw, 'nilai', 'parameter');
+            
+            $this->load->view('peringkat/detail', $data);
+            return;
+        }
+
+        // Fallback to legacy name-based lookup
+        $name_key = urldecode($identifier);
         $result = $this->peringkat->athlete_history($name_key);
+        
         if (empty($result['history'])) {
             show_404();
         }

@@ -30,9 +30,18 @@
                 <img src="<?= base_url('assets/logo/logo.png'); ?>" alt="Logo Brand" class="img-fluid">
                 DIGITAL PENCAK SILAT
             </a>
-            <a href="<?= base_url(); ?>" class="btn btn-brand btn-sm ms-auto">
-                <i class="fas fa-arrow-left me-2"></i> Kembali ke Beranda
-            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="<?= base_url(); ?>#heroCarousel">Beranda</a></li>
+                    <li class="nav-item"><a class="nav-link" href="<?= base_url(); ?>#about">Tentang Kami</a></li>
+                    <li class="nav-item"><a class="nav-link" href="<?= base_url(); ?>#events">Jadwal Event</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="<?= base_url(); ?>#peringkat">Peringkat</a></li>
+                    <li class="nav-item"><a class="nav-link" href="<?= base_url(); ?>#contact">Kontak</a></li>
+                </ul>
+            </div>
         </div>
     </nav>
 
@@ -57,7 +66,7 @@
                         </div>
                         <div class="d-flex align-items-center">
                             <i class="fas fa-star text-danger me-2 fa-lg"></i>
-                            <span>Poin: Emas 5 &middot; Perak 3 &middot; Perunggu 1</span>
+                            <span>Poin: Emas 3 &middot; Perak 2 &middot; Perunggu 1</span>
                         </div>
                     </div>
                 </div>
@@ -128,7 +137,8 @@
                                             <?php endif; ?>
                                         </td>
                                         <td class="fw-bold winner-name">
-                                            <a class="text-decoration-none text-dark" href="<?= base_url('peringkat/atlet?key=' . urlencode($a['name_key'])); ?>">
+                                            <!-- NEW: Use clean URL with row_id -->
+                                             <a class="text-decoration-none text-dark" href="<?= base_url('peringkat/atlet/' . ($a['row_id'] ?? urlencode($a['name_key']))); ?>">
                                                 <?= htmlspecialchars(ucwords(strtolower($a['display_name']))); ?>
                                             </a>
                                         </td>

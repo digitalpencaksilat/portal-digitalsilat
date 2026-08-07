@@ -427,8 +427,12 @@ footer {
 }
 
 .breadcrumb-item a {
-    color: var(--brand-secondary);
+    color: var(--brand-primary);
     text-decoration: none;
+}
+
+.breadcrumb-item.active {
+    color: #fff !important;
 }
 
 .event-poster-detail {

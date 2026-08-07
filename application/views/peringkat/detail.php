@@ -20,7 +20,7 @@
         body { padding-top: 80px; }
         .stat-tile { background:#fff; border-radius:var(--border-radius-md); box-shadow:var(--box-shadow); padding:22px; text-align:center; }
         .stat-tile .num { font-family:'Oswald',sans-serif; font-size:2.2rem; font-weight:700; line-height:1; }
-        .alias-chip { background:#f1f1f1; border-radius:50px; padding:4px 14px; font-size:0.82rem; margin:2px; display:inline-block; }
+        .profile-badge { background-color:var(--brand-primary); color:#fff; }
     </style>
 </head>
 
@@ -33,9 +33,18 @@
                 <img src="<?= base_url('assets/logo/logo.png'); ?>" alt="Logo Brand" class="img-fluid">
                 DIGITAL PENCAK SILAT
             </a>
-            <a href="<?= base_url(); ?>" class="btn btn-brand btn-sm ms-auto">
-                <i class="fas fa-arrow-left me-2"></i> Kembali ke Beranda
-            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="<?= base_url(); ?>#heroCarousel">Beranda</a></li>
+                    <li class="nav-item"><a class="nav-link" href="<?= base_url(); ?>#about">Tentang Kami</a></li>
+                    <li class="nav-item"><a class="nav-link" href="<?= base_url(); ?>#events">Jadwal Event</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="<?= base_url(); ?>#peringkat">Peringkat</a></li>
+                    <li class="nav-item"><a class="nav-link" href="<?= base_url(); ?>#contact">Kontak</a></li>
+                </ul>
+            </div>
         </div>
     </nav>
 
@@ -51,7 +60,7 @@
             </nav>
             <div class="row align-items-center mt-4">
                 <div class="col-12">
-                    <span class="badge bg-warning text-dark mb-2 px-3 py-2 fw-bold text-uppercase">Profil Atlet</span>
+                    <span class="badge profile-badge mb-2 px-3 py-2 fw-bold text-uppercase">Profil Atlet</span>
                     <h1 class="display-5 fw-bold"><?= htmlspecialchars(ucwords(strtolower($summary['display_name']))); ?></h1>
                     <?php if (!empty($summary['kontingen'])): ?>
                         <div class="d-flex flex-wrap gap-4 mt-3">
@@ -78,16 +87,6 @@
                     <div class="col-6 col-md-3"><div class="stat-tile"><div class="num" style="color:var(--brand-primary);"><?= $summary['poin']; ?></div><div class="text-muted mt-1"><i class="fas fa-star"></i> Total Poin</div></div></div>
                 </div>
 
-                <!-- Variasi Nama -->
-                <?php if (count($summary['aliases']) > 1): ?>
-                    <div class="info-box shadow-sm mb-4">
-                        <h6 class="text-muted mb-2"><i class="fas fa-tags me-1"></i> Variasi nama yang tercatat antar event</h6>
-                        <?php foreach ($summary['aliases'] as $al): ?>
-                            <span class="alias-chip"><?= htmlspecialchars($al); ?></span>
-                        <?php endforeach; ?>
-                    </div>
-                <?php endif; ?>
-
                 <!-- Info box riwayat -->
                 <div class="info-box shadow-sm mb-4">
                     <h4 class="mb-2"><i class="fas fa-history text-warning me-2"></i> Riwayat Prestasi</h4>
@@ -110,17 +109,20 @@
                         </thead>
                         <tbody>
                             <?php $no = 1; foreach ($history as $h):
-                                $rank_class = 'rank-' . strtolower(trim($h['rank_label']));
+                                $age_gender_display = trim($h['age_category'] . (isset($h['gender']) && !empty($h['gender']) ? ' - ' . strtoupper($h['gender']) : ''));
+                                if (empty($age_gender_display)) {
+                                    $age_gender_display = '-';
+                                }
                             ?>
                                 <tr class="result-row">
                                     <td class="text-center"><?= $no++; ?></td>
-                                    <td class="fw-bold"><?= htmlspecialchars($h['event_judul'] ?: '-'); ?></td>
+                                    <td class="fw-bold"><?= htmlspecialchars($h['event_judul']); ?></td>
                                     <td class="text-center text-capitalize"><?= htmlspecialchars($h['category_main']); ?></td>
                                     <td><span class="badge bg-light text-dark"><?= htmlspecialchars($h['category_detail']); ?></span></td>
-                                    <td class="text-center"><?= htmlspecialchars(trim($h['age_category'] . (isset($h['gender']) && $h['gender'] ? ' - ' . strtoupper($h['gender']) : ''))); ?></td>
+                                    <td class="text-center"><?= htmlspecialchars($age_gender_display); ?></td>
                                     <td class="contingent-name text-uppercase"><?= htmlspecialchars(strtoupper($h['contingent'])); ?></td>
                                     <td class="text-center" width="150">
-                                        <span class="badge-rank <?= $rank_class; ?>"><?= htmlspecialchars($h['rank_label']); ?></span>
+                                        <span class="badge-rank rank-<?= strtolower(trim($h['rank_label'])); ?>"><?= htmlspecialchars($h['rank_label']); ?></span>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

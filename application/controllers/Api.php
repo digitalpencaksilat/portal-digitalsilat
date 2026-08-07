@@ -47,15 +47,19 @@ class Api extends CI_Controller
         $batch_data = [];
         foreach ($results as $row) {
             $batch_data[] = [
-                'event_id'        => $event_id,
-                'category_main'   => $row['category_main'],   // 'tanding' atau 'seni'
-                'category_detail' => $row['category_detail'], // misal: 'Kelas A Putra'
-                'age_category'    => $row['age_category'],    // misal: 'Usia Dini'
-                'gender'          => $row['gender'],          // 'Putra' atau 'Putri'
-                'winner_name'     => $row['winner_name'],
-                'contingent'      => $row['contingent'],
-                'school'          => (isset($row['school']) && $row['school'] !== '') ? $row['school'] : null, // opsional, bisa null untuk payload lama
-                'rank_label'      => $row['rank_label']       // 'Emas', 'Perak', 'Perunggu'
+                'event_id'          => $event_id,
+                'category_main'     => $row['category_main'],   // 'tanding' atau 'seni'
+                'category_detail'   => $row['category_detail'], // misal: 'Kelas A Putra'
+                'age_category'      => (!empty($row['age_category'])) ? $row['age_category'] : '-', // Age category or "-"
+                'gender'            => (!empty($row['gender'])) ? $row['gender'] : '-',           // Gender or "-"
+                'winner_name'       => $row['winner_name'],
+                'contingent'        => $this->_normalize_upper($row['contingent'] ?? null),
+                'school'            => $this->_normalize_upper($row['school'] ?? null),
+                'rank_label'        => $row['rank_label'],       // 'Emas', 'Perak', 'Perunggu'
+
+                // NEW FIELDS for unique athlete identification
+                'athlete_nik'       => (!empty($row['athlete_nik'])) ? trim($row['athlete_nik']) : null,
+                'athlete_birthdate' => (!empty($row['athlete_birthdate'])) ? $row['athlete_birthdate'] : null
             ];
         }
 
@@ -70,6 +74,21 @@ class Api extends CI_Controller
         }
 
         return $this->_response(['status' => 'success', 'message' => count($batch_data) . ' results processed']);
+    }
+
+    /**
+     * Normalize organization fields while keeping the existing '-' fallback.
+     */
+    private function _normalize_upper($value)
+    {
+        $value = trim((string) $value);
+        if ($value === '') {
+            return '-';
+        }
+
+        return function_exists('mb_strtoupper')
+            ? mb_strtoupper($value, 'UTF-8')
+            : strtoupper($value);
     }
 
     private function _response($data, $status_code = 200)
