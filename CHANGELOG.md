@@ -5,6 +5,24 @@ Semua perubahan signifikan pada proyek ini akan didokumentasikan di file ini.
 ## [Unreleased]
 
 ### Added
+- Portal berita publik beserta halaman daftar dan detail artikel.
+- Manajemen artikel berita di panel admin, termasuk unggah gambar sampul dan optimasi gambar otomatis.
+- Halaman peringkat atlet beserta halaman detail atlet dan pembaruan data secara dinamis.
+- Migrasi database untuk identitas atlet pada hasil event, normalisasi organisasi, dan artikel berita.
+- Dokumentasi arsitektur proyek, analisis database, serta implementasi portal berita.
+
+### Changed
+- Pembaruan landing page dan navigasi untuk mengintegrasikan portal berita dan peringkat atlet.
+- Penyempurnaan perhitungan dan tampilan leaderboard atlet berdasarkan hasil kejuaraan.
+- Pembaruan tampilan panel admin untuk mendukung pengelolaan berita, carousel, event, dan pengaturan.
+
+### Fixed
+- Perbaikan proses push data sekolah melalui API.
+- Perbaikan tampilan dan informasi pada halaman detail event di landing page.
+
+## [2026-05-04]
+
+### Added
 - Fitur **Live Search** pada kalender event (pencarian otomatis saat mengetik dengan *debounce* 500ms).
 - Tombol **Clear Search** (X) pada input pencarian untuk memudahkan reset pencarian.
 - Indikator **Loading** yang lebih intuitif saat proses pencarian atau perpindahan halaman (AJAX).
