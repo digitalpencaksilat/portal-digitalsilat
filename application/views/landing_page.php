@@ -294,31 +294,41 @@
         </div>
     </section>
 
-    <!-- Digital Silat News -->
+    <!-- Digital Pencak Silat News -->
     <?php if (!empty($latest_news)): ?>
     <section id="news" class="py-5 bg-light">
         <div class="container">
             <div class="section-title">
-                <h2>DIGITAL SILAT NEWS</h2>
+                <h2>DIGITAL PENCAK SILAT NEWS</h2>
                 <p>Berita terbaru seputar kejuaraan dan kegiatan Digital Pencak Silat</p>
             </div>
-            <div class="row g-4">
-                <?php $main_news = $featured_news ?: $latest_news[0]; ?>
+            <?php
+            $main_news = $featured_news ?: $latest_news[0];
+            $sidebar_news = [];
+            foreach ($latest_news as $article) {
+                if ($article['id'] == $main_news['id']) continue;
+                $sidebar_news[] = $article;
+                if (count($sidebar_news) === 3) break;
+            }
+            ?>
+            <div class="row g-4 landing-news-grid">
                 <div class="col-lg-7">
-                    <a href="<?= base_url('news/detail/' . rawurlencode($main_news['slug'])); ?>" class="text-decoration-none text-dark">
-                        <article class="event-card h-100 overflow-hidden">
-                            <img src="<?= base_url('assets/uploads/news/covers/' . rawurlencode($main_news['cover_image'] ?: $main_news['cover_image_fallback'])); ?>" alt="<?= html_escape($main_news['image_alt']); ?>" class="w-100" style="height: 330px; object-fit: cover;">
+                    <a href="<?= base_url('news/detail/' . rawurlencode($main_news['slug'])); ?>" class="landing-news-main-link text-decoration-none text-dark">
+                        <article class="event-card landing-news-main-card overflow-hidden">
+                            <img src="<?= base_url('assets/uploads/news/covers/' . rawurlencode($main_news['cover_image'] ?: $main_news['cover_image_fallback'])); ?>" alt="<?= html_escape($main_news['image_alt']); ?>" class="landing-news-main-image">
                             <div class="card-body"><small class="text-danger fw-bold text-uppercase">Berita Utama</small><h3 class="event-title mt-2"><?= html_escape($main_news['title']); ?></h3><p class="text-muted mb-0"><?= html_escape(character_limiter($main_news['excerpt'], 160, '…')); ?></p></div>
                         </article>
                     </a>
                 </div>
                 <div class="col-lg-5">
-                    <?php foreach ($latest_news as $article): if ($article['id'] == $main_news['id']) continue; ?>
-                    <a href="<?= base_url('news/detail/' . rawurlencode($article['slug'])); ?>" class="text-decoration-none text-dark d-flex gap-3 bg-white rounded-3 p-2 mb-3 shadow-sm">
+                    <div class="landing-news-list">
+                    <?php foreach ($sidebar_news as $article): ?>
+                    <a href="<?= base_url('news/detail/' . rawurlencode($article['slug'])); ?>" class="landing-news-item text-decoration-none text-dark d-flex gap-3 bg-white rounded-3 p-2 shadow-sm">
                         <img src="<?= base_url('assets/uploads/news/covers/' . rawurlencode($article['thumbnail_image'] ?: $article['thumbnail_image_fallback'] ?: $article['cover_image'])); ?>" alt="<?= html_escape($article['image_alt']); ?>" width="130" height="100" class="rounded object-fit-cover">
                         <div><h5 class="mb-1"><?= html_escape($article['title']); ?></h5><small class="text-muted"><?= date('d M Y', strtotime($article['published_at'])); ?></small></div>
                     </a>
                     <?php endforeach; ?>
+                    </div>
                 </div>
             </div>
             <div class="text-center mt-4"><a href="<?= base_url('news'); ?>" class="btn btn-brand">Lihat Semua Berita</a></div>
@@ -344,7 +354,7 @@
                         <li class="mb-2"><a href="#about" class="text-dark text-decoration-none hover-underline">Tentang Kami</a></li>
                         <li class="mb-2"><a href="#events" class="text-dark text-decoration-none hover-underline">Jadwal Event</a></li>
                         <li class="mb-2"><a href="#peringkat" class="text-dark text-decoration-none hover-underline">Peringkat Atlet</a></li>
-                        <li class="mb-2"><a href="#news" class="text-dark text-decoration-none hover-underline">Digital Silat News</a></li>
+                        <li class="mb-2"><a href="#news" class="text-dark text-decoration-none hover-underline">Digital Pencak Silat News</a></li>
                     </ul>
                 </div>
                 <div class="col-md-4 mb-4">

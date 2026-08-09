@@ -100,7 +100,7 @@ $user = $this->db->get_where('users', ['username' => $username])->row_array();
 ### Catatan Penting
 
 - Kolom `password` memang ada di database.
-- Namun controller login saat ini belum memverifikasi hash dari kolom tersebut; ia masih membandingkan input password dengan string hardcoded `admin123`.
+- Controller login memverifikasi hash pada kolom tersebut menggunakan `password_verify()`.
 - Secara struktur DB, tabel ini sudah siap untuk auth yang lebih aman.
 
 ## Tabel `events`

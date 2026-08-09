@@ -49,7 +49,7 @@
     <main class="container py-5">
         <div class="d-md-flex justify-content-between align-items-end mb-4">
             <div>
-                <span class="text-danger fw-bold small text-uppercase"><i class="fas fa-<?= isset($article) ? 'edit' : 'pen-nib'; ?> me-2"></i>Editor Digital Silat News</span>
+                <span class="text-danger fw-bold small text-uppercase"><i class="fas fa-<?= isset($article) ? 'edit' : 'pen-nib'; ?> me-2"></i>Editor Digital Pencak Silat News</span>
                 <h1 class="h3 fw-bold text-dark font-oswald mt-2 mb-1"><?= isset($article) ? 'EDIT BERITA' : 'TULIS BERITA BARU'; ?></h1>
                 <p class="text-muted mb-0"><?= isset($article) ? 'Perbarui informasi dan pengaturan publikasi berita.' : 'Susun informasi yang jelas dan mudah dibaca oleh pengunjung.'; ?></p>
             </div>
@@ -59,7 +59,8 @@
         <?php if ($this->session->flashdata('error')): ?><div class="alert alert-danger rounded-3"><i class="fas fa-exclamation-triangle me-2"></i><?= html_escape($this->session->flashdata('error')); ?></div><?php endif; ?>
         <?php if ($this->session->flashdata('success')): ?><div class="alert alert-success rounded-3"><i class="fas fa-check-circle me-2"></i><?= html_escape($this->session->flashdata('success')); ?></div><?php endif; ?>
 
-        <form method="post" action="<?= base_url('admin/news/save'); ?>" enctype="multipart/form-data" id="newsForm">
+    <form method="post" action="<?= base_url('admin/news/save'); ?>" enctype="multipart/form-data" id="newsForm">
+        <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
             <input type="hidden" name="id" value="<?= isset($article) ? (int) $article['id'] : 0; ?>">
             <input type="hidden" name="content" id="contentInput">
 

@@ -43,6 +43,7 @@
                         <?php endif; ?>
 
                         <form action="<?= base_url('admin/auth'); ?>" method="POST" id="loginForm">
+                            <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
                             <div class="mb-4">
                                 <div class="input-group input-group-lg">
                                     <span class="input-group-text"><i class="far fa-user"></i></span>

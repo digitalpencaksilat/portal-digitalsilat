@@ -96,7 +96,8 @@ class Event extends CI_Controller
         // Berita terbaru ditampilkan setelah kalender event di landing page.
         $this->load->model('News_model', 'news');
         $data['featured_news'] = $this->news->featured();
-        $data['latest_news'] = $this->news->all('published', '', 3, 0);
+        // One main story plus up to three distinct sidebar stories.
+        $data['latest_news'] = $this->news->all('published', '', 4, 0);
 
         // Load view utama jika bukan request AJAX
         $this->load->view('landing_page', $data);

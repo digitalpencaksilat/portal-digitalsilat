@@ -32,12 +32,14 @@ class Admin extends CI_Controller
         // Cek user di database
         $user = $this->db->get_where('users', ['username' => $username])->row_array();
 
-        // Validasi Password (Demo: Hardcoded 'admin123')
-        // Di produksi, disarankan menggunakan password_verify($password, $user['password'])
-        if ($user && $password == 'admin123') {
+        $valid_password = $user && password_verify($password, $user['password']);
+
+        if ($valid_password) {
+            $this->session->sess_regenerate(TRUE);
             $sess_data = [
                 'id' => $user['id'],
                 'nama' => $user['nama_lengkap'],
+                'role' => isset($user['role']) ? $user['role'] : 'admin',
                 'logged_in' => TRUE
             ];
             $this->session->set_userdata($sess_data);
@@ -51,7 +53,7 @@ class Admin extends CI_Controller
 
     public function logout()
     {
-        $this->session->unset_userdata(['id', 'nama', 'logged_in']);
+        $this->session->unset_userdata(['id', 'nama', 'role', 'logged_in']);
         $this->session->set_flashdata('success_logout', 'Anda berhasil keluar dari sistem.');
         redirect('admin');
     }
@@ -343,6 +345,7 @@ class Admin extends CI_Controller
     public function hapus($id)
     {
         $this->_check_login();
+        if (strtolower($this->input->method()) !== 'post') show_404();
         $event = $this->db->get_where('events', ['id' => $id])->row_array();
 
         if ($event) {
@@ -426,14 +429,90 @@ class Admin extends CI_Controller
     public function api_management()
     {
         $this->_check_login();
+        $this->load->view('admin/api_settings', $this->_api_management_data());
+    }
+
+    public function generate_publisher_token()
+    {
+        $this->_check_superadmin();
+        if (strtolower($this->input->method()) !== 'post') show_404();
+
+        $name = trim((string) $this->input->post('key_name'));
+        $valid_days = max(30, min(365, (int) $this->input->post('valid_days')));
+        $current_password = (string) $this->input->post('current_password');
+        $current_user = $this->db->get_where('users', ['id' => (int) $this->session->userdata('id')])->row_array();
+        if (!$current_user || !password_verify($current_password, $current_user['password'])) {
+            $this->session->set_flashdata('error', 'Password admin tidak valid. Token tidak dibuat.');
+            redirect('admin/api_management#publishing-api');
+        }
+        if ($name === '' || mb_strlen($name) > 100) {
+            $this->session->set_flashdata('error', 'Nama token wajib diisi dan maksimal 100 karakter.');
+            redirect('admin/api_management#publishing-api');
+        }
+
+        $plain_token = bin2hex(random_bytes(32));
+        $inserted = $this->db->insert('publisher_api_keys', [
+            'key_name' => $name,
+            'token_hash' => hash('sha256', $plain_token),
+            'is_active' => 1,
+            'expires_at' => date('Y-m-d H:i:s', strtotime('+' . $valid_days . ' days')),
+            'created_by' => (int) $this->session->userdata('id'),
+        ]);
+        if (!$inserted) {
+            $this->session->set_flashdata('error', 'Token gagal disimpan ke database.');
+            redirect('admin/api_management#publishing-api');
+        }
+
+        $this->output->set_header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+        $this->output->set_header('Pragma: no-cache');
+        $this->output->set_header('Referrer-Policy: no-referrer');
+        $this->output->set_header("Content-Security-Policy: default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src 'self' data:; base-uri 'none'; form-action 'self'; frame-ancestors 'none'");
+        $this->load->view('admin/publisher_token_created', [
+            'publisher_plain_token' => $plain_token,
+            'publisher_token_name' => $name,
+        ]);
+    }
+
+    public function revoke_publisher_token($id)
+    {
+        $this->_check_superadmin();
+        if (strtolower($this->input->method()) !== 'post') show_404();
+        $this->db->where('id', (int) $id)->update('publisher_api_keys', ['is_active' => 0]);
+        $this->session->set_flashdata('success', 'Publishing token berhasil dinonaktifkan.');
+        redirect('admin/api_management#publishing-api');
+    }
+
+    private function _api_management_data()
+    {
+        $this->db->where('created_at <', date('Y-m-d H:i:s', strtotime('-180 days')))->delete('publisher_api_logs');
         $this->db->order_by('created_at', 'DESC');
         $data['events'] = $this->db->get('events')->result_array();
-        $this->load->view('admin/api_settings', $data);
+        $user = $this->db->select('role')->get_where('users', ['id' => (int) $this->session->userdata('id')])->row_array();
+        $data['can_manage_publisher'] = $user && $user['role'] === 'superadmin';
+        $data['publisher_keys'] = [];
+        $data['publisher_logs'] = [];
+        if ($data['can_manage_publisher']) {
+            $data['publisher_keys'] = $this->db->select('k.*, u.nama_lengkap AS creator_name')
+                ->from('publisher_api_keys k')->join('users u', 'u.id = k.created_by', 'left')
+                ->order_by('k.created_at', 'DESC')->get()->result_array();
+            $data['publisher_logs'] = $this->db->select('l.*, k.key_name')
+                ->from('publisher_api_logs l')->join('publisher_api_keys k', 'k.id = l.api_key_id', 'left')
+                ->order_by('l.created_at', 'DESC')->limit(30)->get()->result_array();
+        }
+        return $data;
+    }
+
+    private function _check_superadmin()
+    {
+        $this->_check_login();
+        $user = $this->db->select('role')->get_where('users', ['id' => (int) $this->session->userdata('id')])->row_array();
+        if (!$user || $user['role'] !== 'superadmin') show_error('Akses khusus superadmin.', 403);
     }
 
     public function generate_api_key($id)
     {
         $this->_check_login();
+        if (strtolower($this->input->method()) !== 'post') show_404();
         
         // Generate 32-character hex string from 16 random bytes
         $new_key = bin2hex(random_bytes(16));
@@ -546,6 +625,7 @@ class Admin extends CI_Controller
     public function news_delete($id)
     {
         $this->_check_login();
+        if (strtolower($this->input->method()) !== 'post') show_404();
         $article = $this->news->find($id);
         if ($article) {
             $this->_delete_news_images($article);
@@ -594,8 +674,7 @@ class Admin extends CI_Controller
 
     private function _sanitize_article($content)
     {
-        $allowed = '<p><br><strong><b><em><i><u><h2><h3><ul><ol><li><blockquote><a>';
-        $content = strip_tags($content, $allowed);
-        return preg_replace('/\s(on\w+|style)\s*=\s*("[^"]*"|\'[^\']*\'|[^\s>]+)/i', '', $content);
+        $this->load->library('article_sanitizer');
+        return $this->article_sanitizer->clean($content);
     }
 }

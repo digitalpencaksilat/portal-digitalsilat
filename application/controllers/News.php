@@ -14,7 +14,7 @@ class News extends CI_Controller
     public function index()
     {
         $keyword = trim((string) $this->input->get('keyword'));
-        $per_page = 9;
+        $per_page = 6;
         $page = max(1, (int) $this->input->get('page'));
         $total = $this->news->count('published', $keyword);
 

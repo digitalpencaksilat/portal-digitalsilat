@@ -5,6 +5,10 @@ Semua perubahan signifikan pada proyek ini akan didokumentasikan di file ini.
 ## [Unreleased]
 
 ### Added
+- Publishing API draft-only untuk pencarian event dan pembuatan draft berita melalui token yang dikelola superadmin.
+- Audit aktivitas Publishing API, masa berlaku token, dan halaman token sekali-tampil.
+- Sanitizer konten artikel serta validasi dimensi dan hak tulis folder untuk optimasi gambar.
+- Konfigurasi contoh dan dokumentasi integrasi Publishing API.
 - Portal berita publik beserta halaman daftar dan detail artikel.
 - Manajemen artikel berita di panel admin, termasuk unggah gambar sampul dan optimasi gambar otomatis.
 - Halaman peringkat atlet beserta halaman detail atlet dan pembaruan data secara dinamis.
@@ -12,11 +16,16 @@ Semua perubahan signifikan pada proyek ini akan didokumentasikan di file ini.
 - Dokumentasi arsitektur proyek, analisis database, serta implementasi portal berita.
 
 ### Changed
+- Penggunaan kata sandi kini memverifikasi hash, dengan regenerasi sesi saat login berhasil.
+- Konfigurasi URL, cookie, dan proxy mendukung environment deployment yang lebih aman.
+- Nama kanal diperbarui menjadi Digital Pencak Silat News dan tata letak daftar beritanya disempurnakan.
 - Pembaruan landing page dan navigasi untuk mengintegrasikan portal berita dan peringkat atlet.
 - Penyempurnaan perhitungan dan tampilan leaderboard atlet berdasarkan hasil kejuaraan.
 - Pembaruan tampilan panel admin untuk mendukung pengelolaan berita, carousel, event, dan pengaturan.
 
 ### Fixed
+- Perlindungan CSRF diaktifkan untuk form aplikasi dengan pengecualian terbatas pada endpoint integrasi API.
+- Aksi pengelolaan admin yang mengubah data kini dibatasi untuk request POST.
 - Perbaikan proses push data sekolah melalui API.
 - Perbaikan tampilan dan informasi pada halaman detail event di landing page.
 

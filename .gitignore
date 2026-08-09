@@ -6,3 +6,10 @@
 .DS_Store
 user_guide/
 *.sql
+
+# Local secrets and environment files
+.secrets/
+.env
+.env.*
+*.env
+!.env.publisher.example

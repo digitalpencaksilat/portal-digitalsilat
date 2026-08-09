@@ -18,7 +18,7 @@ $latest = $featured ? array_slice($articles, 1, 2) : [];
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Digital Silat News - Digital Pencak Silat</title>
+    <title>Digital Pencak Silat News</title>
     <meta name="description" content="Berita terbaru seputar kejuaraan dan kegiatan Digital Pencak Silat.">
     <link rel="shortcut icon" href="<?= base_url('assets/logo/logo.ico'); ?>" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -28,13 +28,11 @@ $latest = $featured ? array_slice($articles, 1, 2) : [];
     <link rel="stylesheet" href="<?= base_url('assets/css/main-style.css'); ?>">
     <style>
         body { background: #f7f7f7; padding-top: 80px; }
-        .news-masthead { position: relative; overflow: hidden; background: #171717; color: #fff; padding: 74px 0 78px; }
-        .news-masthead::before { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,.92) 0%, rgba(0,0,0,.68) 52%, rgba(198,0,0,.45) 100%), url('<?= base_url('assets/carousel/carousel-3.webp'); ?>') center 43%/cover; }
-        .news-masthead .container { position: relative; z-index: 1; }
-        .masthead-kicker { display: inline-flex; align-items: center; gap: 9px; color: #ffd04a; font-size: .8rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
-        .masthead-title { max-width: 780px; margin: 12px 0 15px; font-size: clamp(2.25rem, 5vw, 4.25rem); line-height: 1.03; }
+        .news-masthead { box-sizing: border-box; min-height: 334px; margin-bottom: 40px; }
+        .masthead-kicker { display: inline-flex; align-items: center; gap: 9px; color: var(--brand-primary); font-size: .8rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
+        .masthead-title { max-width: 780px; margin: 12px 0 15px; font-size: clamp(2.25rem, 5vw, 3.5rem); line-height: 1.03; }
         .masthead-copy { max-width: 650px; color: rgba(255,255,255,.78); font-size: 1.05rem; line-height: 1.75; }
-        .search-panel { position: relative; z-index: 2; margin-top: -32px; background: #fff; border-radius: 16px; box-shadow: 0 15px 35px rgba(0,0,0,.1); padding: 18px; }
+        .search-panel { background: #fff; border-radius: 16px; box-shadow: 0 15px 35px rgba(0,0,0,.1); padding: 18px; }
         .search-panel .form-control { min-height: 52px; border: 0; background: #f5f5f5; }
         .search-panel .input-group-text { border: 0; background: #f5f5f5; color: #888; }
         .featured-grid { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(320px, .8fr); gap: 24px; }
@@ -70,7 +68,7 @@ $latest = $featured ? array_slice($articles, 1, 2) : [];
         .empty-news { background: #fff; border-radius: 18px; padding: 65px 24px; text-align: center; box-shadow: 0 7px 24px rgba(0,0,0,.05); }
         .news-footer { margin-top: 70px; }
         @media (max-width: 991.98px) { .featured-grid { grid-template-columns: 1fr; } .featured-story { min-height: 470px; } .latest-panel { padding: 22px; } }
-        @media (max-width: 767.98px) { body { padding-top: 70px; } .news-masthead { padding: 58px 0 62px; } .search-panel { margin-top: -26px; } .featured-story { min-height: 430px; } .featured-content { padding: 25px; } }
+        @media (max-width: 767.98px) { body { padding-top: 70px; } .masthead-copy { font-size: .95rem; line-height: 1.6; } .featured-story { min-height: 430px; } .featured-content { padding: 25px; } }
         @media (max-width: 575.98px) { .navbar-brand { font-size: 1rem; } .navbar-brand img { height: 40px; } .featured-story { min-height: 410px; border-radius: 15px; } .featured-content { padding: 21px; } .latest-item { grid-template-columns: 96px minmax(0,1fr); } .latest-item img { width: 96px; height: 78px; } .section-heading { align-items: start; flex-direction: column; gap: 8px; } }
     </style>
 </head>
@@ -83,8 +81,8 @@ $latest = $featured ? array_slice($articles, 1, 2) : [];
         </div>
     </nav>
 
-    <header class="news-masthead">
-        <div class="container"><div class="masthead-kicker"><i class="fas fa-circle-notch"></i> Kanal Informasi Resmi</div><h1 class="masthead-title">DIGITAL SILAT NEWS</h1><p class="masthead-copy mb-0">Kabar terbaru seputar kejuaraan, hasil pertandingan, dan kegiatan Digital Pencak Silat dalam satu portal informasi.</p></div>
+    <header class="event-header news-masthead" style="background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('<?= base_url('assets/carousel/carousel-3.webp'); ?>');">
+        <div class="container"><div class="masthead-kicker"><i class="fas fa-circle-notch"></i> Kanal Informasi Resmi</div><h1 class="masthead-title">DIGITAL PENCAK SILAT NEWS</h1><p class="masthead-copy mb-0">Kabar terbaru seputar kejuaraan, hasil pertandingan, dan kegiatan Digital Pencak Silat dalam satu portal informasi.</p></div>
     </header>
 
     <main>
@@ -110,7 +108,7 @@ $latest = $featured ? array_slice($articles, 1, 2) : [];
         </div>
     </main>
 
-    <footer id="contact" class="news-footer"><div class="container"><div class="row"><div class="col-md-4 mb-4"><div class="footer-brand"><img src="<?= base_url('assets/logo/logo.png'); ?>" alt="Logo"><span class="brand-text">DIGITAL PENCAK SILAT</span></div><p class="text-muted">Mendukung digitalisasi event pencak silat untuk pelestarian budaya dan prestasi atlet Indonesia.</p></div><div class="col-md-4 mb-4"><h5 class="text-uppercase fw-bold mb-3 text-danger">Navigasi</h5><ul class="list-unstyled"><li class="mb-2"><a href="<?= base_url(); ?>" class="text-dark text-decoration-none">Beranda</a></li><li class="mb-2"><a href="<?= base_url(); ?>#events" class="text-dark text-decoration-none">Jadwal Event</a></li><li class="mb-2"><a href="<?= base_url('peringkat'); ?>" class="text-dark text-decoration-none">Peringkat Atlet</a></li><li class="mb-2"><a href="<?= base_url('news'); ?>" class="text-dark text-decoration-none">Digital Silat News</a></li></ul></div><div class="col-md-4 mb-4"><h5 class="text-uppercase fw-bold mb-3 text-danger">Kontak</h5><ul class="list-unstyled"><li class="mb-2"><i class="fab fa-whatsapp me-2 text-success"></i>+<?= html_escape(isset($s['whatsapp']) ? $s['whatsapp'] : ''); ?></li><li class="mb-2"><i class="far fa-envelope me-2 text-danger"></i><?= html_escape(isset($s['email']) ? $s['email'] : ''); ?></li><li class="mb-2"><a href="https://instagram.com/<?= html_escape(isset($s['instagram']) ? $s['instagram'] : ''); ?>" target="_blank" rel="noopener" class="text-dark text-decoration-none"><i class="fab fa-instagram me-2 text-danger"></i>@<?= html_escape(isset($s['instagram']) ? $s['instagram'] : ''); ?></a></li></ul></div></div><hr><div class="text-center pb-3 pt-2"><small class="text-muted">&copy; <?= date('Y'); ?> Digital Pencak Silat. All rights reserved.</small></div></div></footer>
+    <footer id="contact" class="news-footer"><div class="container"><div class="row"><div class="col-md-4 mb-4"><div class="footer-brand"><img src="<?= base_url('assets/logo/logo.png'); ?>" alt="Logo"><span class="brand-text">DIGITAL PENCAK SILAT</span></div><p class="text-muted">Mendukung digitalisasi event pencak silat untuk pelestarian budaya dan prestasi atlet Indonesia.</p></div><div class="col-md-4 mb-4"><h5 class="text-uppercase fw-bold mb-3 text-danger">Navigasi</h5><ul class="list-unstyled"><li class="mb-2"><a href="<?= base_url(); ?>" class="text-dark text-decoration-none">Beranda</a></li><li class="mb-2"><a href="<?= base_url(); ?>#events" class="text-dark text-decoration-none">Jadwal Event</a></li><li class="mb-2"><a href="<?= base_url('peringkat'); ?>" class="text-dark text-decoration-none">Peringkat Atlet</a></li><li class="mb-2"><a href="<?= base_url('news'); ?>" class="text-dark text-decoration-none">Digital Pencak Silat News</a></li></ul></div><div class="col-md-4 mb-4"><h5 class="text-uppercase fw-bold mb-3 text-danger">Kontak</h5><ul class="list-unstyled"><li class="mb-2"><i class="fab fa-whatsapp me-2 text-success"></i>+<?= html_escape(isset($s['whatsapp']) ? $s['whatsapp'] : ''); ?></li><li class="mb-2"><i class="far fa-envelope me-2 text-danger"></i><?= html_escape(isset($s['email']) ? $s['email'] : ''); ?></li><li class="mb-2"><a href="https://instagram.com/<?= html_escape(isset($s['instagram']) ? $s['instagram'] : ''); ?>" target="_blank" rel="noopener" class="text-dark text-decoration-none"><i class="fab fa-instagram me-2 text-danger"></i>@<?= html_escape(isset($s['instagram']) ? $s['instagram'] : ''); ?></a></li></ul></div></div><hr><div class="text-center pb-3 pt-2"><small class="text-muted">&copy; <?= date('Y'); ?> Digital Pencak Silat. All rights reserved.</small></div></div></footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -185,7 +185,7 @@
                                         </td>
                                         <td class="text-end pe-4">
                                             <a href="<?= base_url('admin/edit/' . $ev['id']); ?>" class="btn btn-sm btn-light text-primary border me-1" title="Edit"><i class="fas fa-edit"></i></a>
-                                            <a href="<?= base_url('admin/hapus/' . $ev['id']); ?>" class="btn btn-sm btn-light text-danger border btn-hapus" title="Hapus"><i class="fas fa-trash"></i></a>
+                                            <?= form_open('admin/hapus/' . $ev['id'], ['class' => 'd-inline event-delete-form']); ?><button type="submit" class="btn btn-sm btn-light text-danger border" title="Hapus"><i class="fas fa-trash"></i></button><?= form_close(); ?>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -227,9 +227,9 @@
             Swal.fire({ icon: 'error', title: 'Gagal!', text: '<?= $this->session->flashdata('error'); ?>', confirmButtonColor: '#C60000' });
         <?php endif; ?>
 
-        $(document).on('click', '.btn-hapus', function(e) {
+        $(document).on('submit', '.event-delete-form', function(e) {
             e.preventDefault();
-            const href = $(this).attr('href');
+            const form = this;
             Swal.fire({
                 title: 'Yakin hapus event ini?',
                 text: "Data yang dihapus tidak bisa dikembalikan!",
@@ -239,7 +239,7 @@
                 cancelButtonColor: '#6c757d',
                 confirmButtonText: 'Ya, Hapus!',
                 cancelButtonText: 'Batal'
-            }).then((result) => { if (result.isConfirmed) window.location.href = href; });
+            }).then((result) => { if (result.isConfirmed) form.submit(); });
         });
 
         $('#btn-logout').on('click', function(e) {

@@ -6,7 +6,7 @@
 
 ### Public Portal
 - **Dynamic Landing Page**: Features a responsive carousel and event highlights.
-- **Digital Silat News**: Global news listing, SEO-friendly article detail pages, search, featured news, and optional event links.
+- **Digital Pencak Silat News**: Global news listing, SEO-friendly article detail pages, search, featured news, and optional event links.
 - **Event Listing**: Paginated view of all Pencak Silat events with AJAX-powered navigation for smooth transitions.
 - **Event Status**: Clear indicators for event statuses such as *Open Registration*, *Coming Soon*, and *Finished*.
 - **Visitor Tracking**: Built-in system to track unique daily visitors via IP addresses.
@@ -59,7 +59,7 @@ To run this project locally, follow these steps:
    - Access the admin dashboard via `http://localhost/portal-digitalsilat/index.php/admin`.
    - Manage news via `http://localhost/portal-digitalsilat/index.php/admin/news`.
 
-## Digital Silat News
+## Digital Pencak Silat News
 
 The news module intentionally has no categories. Articles can cover upcoming competitions, completed competitions, or Digital Pencak Silat activities. An article may optionally reference an event through `related_event_id`.
 
@@ -69,6 +69,8 @@ Public URLs:
 - `http://localhost/portal-digitalsilat/index.php/news/detail/{slug}`
 
 See [docs/NEWS_IMPLEMENTATION.md](docs/NEWS_IMPLEMENTATION.md) for the database fields, image pipeline, and deployment notes.
+
+Publishing API draft-only didokumentasikan di [docs/PUBLISHING_API.md](docs/PUBLISHING_API.md). Token lokal disimpan di `.secrets/.env.publisher`, yang diabaikan Git dan tidak ikut deployment.
 
 ## 📷 Screenshots
 

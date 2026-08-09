@@ -24,6 +24,9 @@ class Image_optimizer
         if (!$info || empty($info['mime'])) {
             return ['status' => FALSE, 'error' => 'File yang diunggah bukan gambar yang valid.'];
         }
+        if (empty($info[0]) || empty($info[1]) || $info[0] > 8000 || $info[1] > 8000 || ($info[0] * $info[1]) > 12000000) {
+            return ['status' => FALSE, 'error' => 'Dimensi gambar terlalu besar. Maksimal 12 megapiksel.'];
+        }
 
         $allowed = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
         if (!in_array(strtolower($info['mime']), $allowed, TRUE)) {
@@ -37,6 +40,9 @@ class Image_optimizer
 
         if (!is_dir($directory) && !@mkdir($directory, 0755, TRUE)) {
             return ['status' => FALSE, 'error' => 'Folder penyimpanan gambar tidak dapat dibuat.'];
+        }
+        if (!is_writable($directory)) {
+            return ['status' => FALSE, 'error' => 'Folder penyimpanan gambar tidak writable oleh PHP.'];
         }
 
         $source = $this->create_source($source_path, $info['mime']);

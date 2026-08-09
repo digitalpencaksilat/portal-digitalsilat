@@ -190,7 +190,7 @@ File: `application/controllers/Admin.php`
 - `index()` menampilkan login jika belum login; redirect dashboard jika sudah login.
 - `auth()` mengambil `username` dan `password` dari POST.
 - User dicek dari tabel `users` berdasarkan `username`.
-- Password saat ini masih hardcoded `admin123`.
+- Password admin diverifikasi terhadap hash pada kolom `users.password` menggunakan `password_verify()`.
 - Jika sukses, session berisi:
   - `id`
   - `nama`
@@ -203,7 +203,7 @@ URL:
 - `/admin/auth`
 - `/admin/logout`
 
-Catatan keamanan: kolom `password` di tabel `users` belum dipakai untuk validasi hash; controller masih membandingkan password input dengan string `admin123`.
+Catatan keamanan: password admin disimpan sebagai hash pada tabel `users`; tidak ada password fallback hardcoded.
 
 #### Dashboard
 
